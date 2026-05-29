@@ -1,5 +1,6 @@
 import React from 'react';
-import { Github, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Github } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 
 export default function Projects() {
@@ -38,9 +39,29 @@ export default function Projects() {
     }
   ];
 
+  // Grid spring motion configurations
+  const cardVariants = {
+    hidden: { opacity: 0, y: 35 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 110,
+        damping: 16
+      }
+    }
+  };
+
   return (
     <section id="projects" className="py-20 px-6 sm:px-12 bg-white dark:bg-zinc-950 font-sans border-b border-slate-100 dark:border-zinc-900">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
+      >
         
         {/* Left Side: Header (Spans 4 columns) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
@@ -56,56 +77,63 @@ export default function Projects() {
         <div className="lg:col-span-8 space-y-6">
           <div className="grid grid-cols-1 gap-6">
             {projects.map((p, idx) => (
-              <GlassCard 
-                key={idx} 
-                className="hover:-translate-y-1 transition-all border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 flex flex-col justify-between"
+              <motion.div
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                key={idx}
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] uppercase font-mono tracking-widest text-neutral-400 font-bold">
-                      {p.subtitle}
-                    </span>
-                    <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-mono font-bold">
-                      {p.metrics}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-base font-bold text-black dark:text-white leading-tight">
-                    {p.title}
-                  </h3>
-                  
-                  <p className="text-xs text-neutral-500 dark:text-zinc-400 leading-relaxed">
-                    {p.desc}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100 dark:border-zinc-900 mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex flex-wrap gap-1">
-                    {p.tech.map((t, tIdx) => (
-                      <span 
-                        key={tIdx} 
-                        className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 text-[8px] font-mono leading-none"
-                      >
-                        {t}
+                <GlassCard 
+                  className="hover:-translate-y-1 transition-all border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] uppercase font-mono tracking-widest text-neutral-400 font-bold">
+                        {p.subtitle}
                       </span>
-                    ))}
+                      <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-mono font-bold">
+                        {p.metrics}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-base font-bold text-black dark:text-white leading-tight">
+                      {p.title}
+                    </h3>
+                    
+                    <p className="text-xs text-neutral-500 dark:text-zinc-400 leading-relaxed">
+                      {p.desc}
+                    </p>
                   </div>
-                  
-                  <a
-                    href={p.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] uppercase font-mono tracking-wider font-bold text-neutral-800 dark:text-zinc-300 hover:text-indigo-600 transition-colors"
-                  >
-                    <Github size={12} /> Source Code
-                  </a>
-                </div>
-              </GlassCard>
+
+                  <div className="pt-4 border-t border-slate-100 dark:border-zinc-900 mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex flex-wrap gap-1">
+                      {p.tech.map((t, tIdx) => (
+                        <span 
+                          key={tIdx} 
+                          className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 text-[8px] font-mono leading-none"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <a
+                      href={p.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] uppercase font-mono tracking-wider font-bold text-neutral-800 dark:text-zinc-300 hover:text-indigo-600 transition-colors"
+                    >
+                      <Github size={12} /> Source Code
+                    </a>
+                  </div>
+                </GlassCard>
+              </motion.div>
             ))}
           </div>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function About() {
   const [childhoodErr, setChildhoodErr] = useState(false);
@@ -26,7 +27,13 @@ export default function About() {
 
   return (
     <section id="about" className="py-20 px-6 sm:px-12 bg-white dark:bg-zinc-950 font-sans border-b border-slate-100 dark:border-zinc-900">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
+      >
         
         {/* Left Side: Category Header & Childhood Image (Spans 4 columns) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
@@ -39,9 +46,15 @@ export default function About() {
             </p>
           </div>
 
-          {/* Optional Childhood Photo with Error Fallback */}
+          {/* Childhood Photo with Error Fallback */}
           {!childhoodErr && (
-            <div className="pt-6 border-t border-slate-100 dark:border-zinc-900 flex flex-col items-start gap-2">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="pt-6 border-t border-slate-100 dark:border-zinc-900 flex flex-col items-start gap-2"
+            >
               <div className="w-32 h-32 rounded-2xl overflow-hidden border border-slate-200/85 dark:border-zinc-800 shadow-sm transition-transform duration-300 hover:scale-[1.03] bg-slate-50 dark:bg-zinc-900">
                 <img 
                   src="/childhood.jpg" 
@@ -53,7 +66,7 @@ export default function About() {
               <span className="text-[9px] uppercase font-mono tracking-widest text-neutral-400 dark:text-zinc-500 font-bold">
                 Where it started (2004) 👶
               </span>
-            </div>
+            </motion.div>
           )}
         </div>
 
@@ -69,7 +82,7 @@ export default function About() {
             </p>
           </div>
 
-          {/* Clean Education List */}
+          {/* Education Timeline */}
           <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-zinc-900">
             <h3 className="text-lg font-bold tracking-tight text-black dark:text-white uppercase">
               Education Timeline
@@ -77,7 +90,14 @@ export default function About() {
             
             <div className="space-y-6">
               {education.map((edu, idx) => (
-                <div key={idx} className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 text-sm">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  key={idx} 
+                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 text-sm"
+                >
                   <span className="font-mono text-xs font-bold text-neutral-400 dark:text-zinc-500 sm:w-28 shrink-0">
                     {edu.year}
                   </span>
@@ -92,14 +112,14 @@ export default function About() {
                       {edu.desc}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -93,7 +93,13 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-20 px-6 sm:px-12 bg-[#FAF7F0] dark:bg-zinc-900 font-sans">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
+      >
         
         {/* Left Side: Header (Spans 4 columns) */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
@@ -228,7 +234,7 @@ export default function Contact() {
           </GlassCard>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
