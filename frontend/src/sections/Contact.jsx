@@ -47,11 +47,21 @@ export default function Contact() {
     setStatus('loading');
 
     try {
-      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${backendUrl}/api/contact`, {
+      const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY || '98a7caf4-4528-4e0c-b13a-a14c865d62ed';
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: web3FormsKey,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: 'Portfolio Contact Form'
+        })
       });
       const data = await res.json();
 
@@ -61,7 +71,7 @@ export default function Contact() {
         setStatusMessage(data.message || 'Message submitted successfully!');
       } else {
         setStatus('error');
-        setStatusMessage(data.error || 'Server error. Please verify inputs.');
+        setStatusMessage(data.message || 'Submission failed. Please verify inputs.');
       }
     } catch (err) {
       console.error('Contact submission error:', err);
@@ -79,6 +89,7 @@ export default function Contact() {
       }, 1000);
     }
   };
+
 
   return (
     <section id="contact" className="py-20 px-6 sm:px-12 bg-[#FAF7F0] dark:bg-zinc-900 font-sans">
