@@ -66,7 +66,12 @@ app.get('/', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
-  console.log(`Database Mode: ${isMongoConnected ? 'MongoDB' : 'JSON Fallback'}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server listening on port ${PORT}`);
+    console.log(`Database Mode: ${isMongoConnected ? 'MongoDB' : 'JSON Fallback'}`);
+  });
+}
+
+module.exports = app;
+
