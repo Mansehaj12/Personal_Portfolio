@@ -66,9 +66,10 @@ export default function TechTerminal() {
       case 'projects':
         reply = [
           { text: 'ENGINEERING CATALOG:', type: 'sys' },
-          { text: '  1. PowerMRO - Equipment Health Telemetry (Next.js/TypeScript/Recharts)', type: 'text' },
-          { text: '  2. GameIQ   - Player Retention ML Pipeline (Python/Flask/RandomForest)', type: 'text' },
-          { text: '  3. Weather  - Asynchronous Location Tracker (Vanilla JS/APIs)', type: 'text' }
+          { text: '  1. MediSmart - AI-Assisted Generic Medicine Swap (React/Tesseract.js OCR)', type: 'text' },
+          { text: '  2. PowerMRO - Equipment Health Telemetry (Next.js/TypeScript/Recharts)', type: 'text' },
+          { text: '  3. GameIQ   - Player Retention ML Pipeline (Python/Flask/RandomForest)', type: 'text' },
+          { text: '  4. Weather  - Asynchronous Location Tracker (Vanilla JS/APIs)', type: 'text' }
         ];
         break;
       case 'kaggle':

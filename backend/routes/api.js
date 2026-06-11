@@ -176,11 +176,11 @@ router.post('/chatbot', (req, res) => {
   let reply = "";
 
   // Keyword Matching Router
-  if (lower.includes('project') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('weather') || lower.includes('currency') || lower.includes('code') || lower.includes('build')) {
+  if (lower.includes('project') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('weather') || lower.includes('currency') || lower.includes('code') || lower.includes('build')) {
     reply = "Mansehaj has built several impressive engineering and data science projects: \n" +
-            "1. **PowerMRO**: An industrial simulation platform in Next.js & Recharts. It simulates telemetry sensor data (temp, vibration) and uses mathematical failure intervals to calculate the Remaining Useful Life (RUL) of engines.\n" +
-            "2. **GameIQ**: An ML player analytics dashboard built with Python, Flask, and Scikit-learn. It predicts mobile user churn with 86.8% accuracy on a dataset of 90,000+ gamers.\n" +
-            "3. **Interactive Weather Dashboard**: Built using pure JS & OpenWeather API with async/await, local storage, and rigorous error fallbacks.\n" +
+            "1. **MediSmart**: An AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.\n" +
+            "2. **PowerMRO**: An industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).\n" +
+            "3. **GameIQ**: An ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on a dataset of 90,000+ gamers.\n" +
             "Which of these projects would you like to know more about?";
   } 
   else if (lower.includes('skill') || lower.includes('language') || lower.includes('stack') || lower.includes('python') || lower.includes('javascript') || lower.includes('c++') || lower.includes('sql') || lower.includes('java')) {

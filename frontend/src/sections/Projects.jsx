@@ -6,6 +6,14 @@ import GlassCard from '../components/GlassCard';
 export default function Projects() {
   const projects = [
     {
+      title: 'MediSmart: AI-Assisted E-Pharmacy & Generic Swap Portal',
+      subtitle: 'Client-Side AI & Healthcare Tech',
+      desc: 'Engineered a client-side AI-assisted e-pharmacy platform featuring a generic medicine substitution engine to swap brand-name drugs for bio-equivalents, saving up to 80%. Integrated a client-side OCR prescription scanner using Tesseract.js and structured dynamic Recharts-powered spend analytics.',
+      tech: ['React.js', 'Tesseract.js', 'Recharts', 'React Router', 'CSS Variables', 'Vite'],
+      metrics: 'Cost Savings: up to 80% | OCR speed: <3s',
+      github: 'https://github.com/Mansehaj12/Medismart'
+    },
+    {
       title: 'PowerMRO: Telemetry Simulation & Health Dashboard',
       subtitle: 'Industrial Equipment Telemetry',
       desc: 'Designed and developed a simulation platform mimicking enterprise-level control room dashboards. Engineered a real-time telemetry engine simulating live sensor data (temp, vibration) and calculated Remaining Useful Life (RUL) using failure interval variables.',
@@ -19,7 +27,7 @@ export default function Projects() {
       desc: 'Built an end-to-end Machine Learning pipeline to predict user churn using a mobile gamer log database of 90,000+ players. Integrated features capturing milestones, deployed a Random Forest model, and hosted it behind a Flask REST API and React dashboard.',
       tech: ['Python', 'Flask', 'Scikit-learn', 'Random Forest', 'Pandas & NumPy', 'Node.js'],
       metrics: 'Test Accuracy: 86.8% | ROC-AUC: 0.912',
-      github: 'https://github.com/Mansehaj12/GameIQ'
+      github: 'https://github.com/Mansehaj12/GameIQ-Player-Churn-Prediction'
     },
     {
       title: 'Robust Weather & Environmental Dashboard',

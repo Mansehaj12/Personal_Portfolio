@@ -12,6 +12,7 @@ export default function Experience() {
       icon: FileCode2,
       color: 'cyan',
       bullets: [
+        'Designed and developed MediSmart, a client-side AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts.',
         'Engineered GameIQ, an end-to-end player churn analytics pipeline processing 90k mobile gamer logs, securing 86.8% prediction accuracy.',
         'Developed PowerMRO, a real-time sensor simulator calculating machinery remaining useful life (RUL) with Next.js & TypeScript.',
         'Wrote robust unit test validations using PyTest and integrated automated GitHub Actions tests.'

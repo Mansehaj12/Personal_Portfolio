@@ -60,9 +60,8 @@ export default function AIChatbot() {
       // Fallback answers in case backend is loading/unavailable
       let fallbackReply = "I'm having trouble reaching the backend server right now, but I can tell you that Mansehaj Preet Singh is a Computer Engineering student at TIET (graduation 2027) and a Kaggle Expert specializing in Python, Machine Learning, and Web Development!";
       
-      const lower = msgText.toLowerCase();
-      if (lower.includes('project') || lower.includes('gameiq') || lower.includes('powermro')) {
-        fallbackReply = "Mansehaj's projects include **PowerMRO** (Industrial health simulator with Next.js/Recharts calculating engine RUL) and **GameIQ** (ML-powered player analytics predicting churn for 90k+ users with 86.8% accuracy).";
+      if (lower.includes('project') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart')) {
+        fallbackReply = "Mansehaj's projects include:\n• **MediSmart** (AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts)\n• **PowerMRO** (Industrial equipment health dashboard with Next.js & TypeScript calculating engine RUL)\n• **GameIQ** (ML-powered player analytics predicting churn for 90k+ users with 86.8% accuracy).";
       } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
         fallbackReply = "You can contact Mansehaj Preet Singh at **sehajpreetsingh480@gmail.com** or call **+91-78886-55097**.";
       } else if (lower.includes('skill') || lower.includes('python') || lower.includes('javascript')) {
