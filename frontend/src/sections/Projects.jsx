@@ -6,6 +6,14 @@ import GlassCard from '../components/GlassCard';
 export default function Projects() {
   const projects = [
     {
+      title: 'CareerLens: AI-Powered Job Market Intelligence & Placement Analytics',
+      subtitle: 'Data Engineering & Predictive ML SaaS',
+      desc: 'Engineered an end-to-end job market intelligence and predictive placement SaaS. Features a Ridge Regression engine for real-time salary estimation, an NLP-based PDF resume skill gap analyzer, and a Decision Tree classifier trained on 5,000+ academic profiles to simulate student placement probabilities in real-time.',
+      tech: ['React.js', 'Flask', 'Python', 'Scikit-learn', 'Tailwind CSS', 'Recharts', 'SQLite'],
+      metrics: 'ETL: 52k jobs | Salary RMSE: ~$24k',
+      github: 'https://github.com/Mansehaj12/careerlens-placement-platform'
+    },
+    {
       title: 'MediSmart: AI-Assisted E-Pharmacy & Generic Swap Portal',
       subtitle: 'Client-Side AI & Healthcare Tech',
       desc: 'Engineered a client-side AI-assisted e-pharmacy platform featuring a generic medicine substitution engine to swap brand-name drugs for bio-equivalents, saving up to 80%. Integrated a client-side OCR prescription scanner using Tesseract.js and structured dynamic Recharts-powered spend analytics.',
@@ -35,7 +43,7 @@ export default function Projects() {
       desc: 'Developed a responsive weather dashboard fetching environmental metrics via REST API. Engineered robust data validations and input cache mechanisms using localStorage to preserve state queries and prevent runtime exceptions.',
       tech: ['JavaScript', 'REST APIs', 'OpenWeather API', 'HTML5/CSS3', 'Local Storage'],
       metrics: 'API latency: <100ms | Input-guard verified',
-      github: 'https://github.com/Mansehaj12/weather-dashboard'
+      github: 'https://github.com/Mansehaj12/weather-web-dashboard'
     },
     {
       title: 'Real-Time Financial Converter Engine',
