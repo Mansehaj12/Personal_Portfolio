@@ -308,6 +308,9 @@ router.post('/chatbot', async (req, res) => {
   else if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey') || lower.includes('greetings')) {
     reply = "Hello! I am Mansehaj's portfolio chatbot assistant. I'm here to help you navigate his work. Ask me anything about his **projects**, **technical skills**, **education**, **Kaggle status**, or **how to contact him**.";
   }
+  else if (lower.includes('ok') || lower.includes('okay') || lower.includes('thanks') || lower.includes('thank') || lower.includes('got it') || lower.includes('cool') || lower.includes('great') || lower.includes('awesome')) {
+    reply = "You're welcome! Feel free to ask any other questions about Mansehaj's projects, technical skills, or how to get in touch with him.";
+  }
   else {
     reply = "I'm not sure I fully understand that question, but I'd love to help! You can ask me about:\n" +
             "• Mansehaj's projects like *CareerLens*, *PowerMRO*, or *GameIQ*\n" +
