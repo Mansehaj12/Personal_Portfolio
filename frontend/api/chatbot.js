@@ -61,63 +61,42 @@ export default async function handler(req, res) {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
-  const fallbackGeminiKey = Buffer.from('QUl6YVN5QVJybld0a0RnYnVhWFhHS3NBd1NYeEJRNFFUN2NDdGtn', 'base64').toString('utf-8');
-  let geminiKey = process.env.GEMINI_API_KEY;
-  if (!geminiKey || geminiKey.trim() === '' || geminiKey.trim().startsWith('AQ.') || geminiKey.includes('your_gemini')) {
-    geminiKey = fallbackGeminiKey;
-  }
+  const geminiKey = process.env.GEMINI_API_KEY;
   let geminiErrorDebug = "";
 
-  // 1. Query Google Gemini AI API (100% FREE FOREVER)
-  try {
-    const contentsPayload = [];
+  if (geminiKey && geminiKey.trim() !== '' && !geminiKey.includes('your_gemini')) {
+    // 1. Query Google Gemini AI API (100% FREE FOREVER)
+    try {
+      const contentsPayload = [];
 
-    if (Array.isArray(history) && history.length > 0) {
-      history.slice(-4).forEach(item => {
-        if (item.role && item.content) {
-          contentsPayload.push({
-            role: item.role === 'user' ? 'user' : 'model',
-            parts: [{ text: item.content }]
-          });
-        }
+      if (Array.isArray(history) && history.length > 0) {
+        history.slice(-4).forEach(item => {
+          if (item.role && item.content) {
+            contentsPayload.push({
+              role: item.role === 'user' ? 'user' : 'model',
+              parts: [{ text: item.content }]
+            });
+          }
+        });
+      }
+
+      contentsPayload.push({
+        role: 'user',
+        parts: [{ text: message }]
       });
-    }
 
-    contentsPayload.push({
-      role: 'user',
-      parts: [{ text: message }]
-    });
+      const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+      const headers = { 'Content-Type': 'application/json' };
+      let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
 
-    const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-    const headers = { 'Content-Type': 'application/json' };
-    let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+      if (geminiKey.trim().startsWith('AQ.')) {
+        headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
+        headers['x-goog-api-key'] = geminiKey.trim();
+      } else {
+        url += `?key=${geminiKey.trim()}`;
+      }
 
-    if (geminiKey.trim().startsWith('AQ.')) {
-      headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
-      headers['x-goog-api-key'] = geminiKey.trim();
-    } else {
-      url += `?key=${geminiKey.trim()}`;
-    }
-
-    let response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: SYSTEM_PROMPT }]
-        },
-        contents: contentsPayload,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 350
-        }
-      })
-    });
-
-    // If rate limited (HTTP 429), wait 1.2s and retry once
-    if (response.status === 429) {
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      response = await fetch(url, {
+      let response = await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -131,25 +110,46 @@ export default async function handler(req, res) {
           }
         })
       });
-    }
 
-    if (response.ok) {
-      const data = await response.json();
-      const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (geminiReply) {
-        return res.status(200).json({
-          reply: geminiReply.trim(),
-          poweredBy: 'Google Gemini AI'
+      // If rate limited (HTTP 429), wait 1.2s and retry once
+      if (response.status === 429) {
+        await new Promise(resolve => setTimeout(resolve, 1200));
+        response = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: SYSTEM_PROMPT }]
+            },
+            contents: contentsPayload,
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 350
+            }
+          })
         });
       }
-    } else {
-      const errText = await response.text();
-      console.error(`Gemini API Error ${response.status}:`, errText);
-      geminiErrorDebug = `Gemini HTTP ${response.status}`;
+
+      if (response.ok) {
+        const data = await response.json();
+        const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (geminiReply) {
+          return res.status(200).json({
+            reply: geminiReply.trim(),
+            poweredBy: 'Google Gemini AI'
+          });
+        }
+      } else {
+        const errText = await response.text();
+        console.error(`Gemini API Error ${response.status}:`, errText);
+        geminiErrorDebug = `Gemini HTTP ${response.status}`;
+      }
+    } catch (geminiErr) {
+      console.error('Gemini fetch error:', geminiErr.message);
+      geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
     }
-  } catch (geminiErr) {
-    console.error('Gemini fetch error:', geminiErr.message);
-    geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
+  } else {
+    geminiErrorDebug = "GEMINI_API_KEY missing in Vercel Env Vars";
   }
 
   // 2. Fallback Smart Rule Engine

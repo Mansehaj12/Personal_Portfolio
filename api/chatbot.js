@@ -61,12 +61,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
-  const fallbackGeminiKey = Buffer.from('QUl6YVN5QVJybld0a0RnYnVhWFhHS3NBd1NYeEJRNFFUN2NDdGtn', 'base64').toString('utf-8');
-  let geminiKey = process.env.GEMINI_API_KEY;
-  if (!geminiKey || geminiKey.trim() === '' || geminiKey.trim().startsWith('AQ.') || geminiKey.includes('your_gemini')) {
-    geminiKey = fallbackGeminiKey;
-  }
+  const geminiKey = process.env.GEMINI_API_KEY;
   let geminiErrorDebug = "";
+
+  if (geminiKey && geminiKey.trim() !== '' && !geminiKey.includes('your_gemini')) {
 
   // 1. Query Google Gemini AI API (100% FREE FOREVER)
   try {
@@ -151,6 +149,9 @@ export default async function handler(req, res) {
     console.error('Gemini fetch error:', geminiErr.message);
     geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
   }
+} else {
+  geminiErrorDebug = "GEMINI_API_KEY missing in Vercel Env Vars";
+}
 
   // 2. Fallback Smart Rule Engine
   const lower = message.toLowerCase();
