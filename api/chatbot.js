@@ -64,7 +64,7 @@ export default async function handler(req, res) {
   const geminiKey = process.env.GEMINI_API_KEY;
   const openAiKey = process.env.OPENAI_API_KEY;
 
-  // 1. Try Google Gemini AI API (100% FREE FOREVER)
+  // 1. Query Google Gemini AI API (100% FREE FOREVER via process.env.GEMINI_API_KEY)
   if (geminiKey && geminiKey.trim() !== '' && !geminiKey.includes('your_gemini')) {
     try {
       const contentsPayload = [];
