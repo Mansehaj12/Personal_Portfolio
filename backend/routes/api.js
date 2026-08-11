@@ -254,7 +254,7 @@ router.post('/chatbot', async (req, res) => {
           contents: contentsPayload,
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 2500
+            maxOutputTokens: 500
           }
         })
       });
