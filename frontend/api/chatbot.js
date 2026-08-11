@@ -89,36 +89,26 @@ export default async function handler(req, res) {
         parts: [{ text: message }]
       });
 
-      const geminiModel = process.env.GEMINI_MODEL || 'gemini-flash-latest';
-      const headers = { 'Content-Type': 'application/json' };
-      let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+      const modelsToTry = [
+      process.env.GEMINI_MODEL || 'gemini-flash-latest',
+      'gemini-2.5-flash',
+      'gemini-3.5-flash',
+      'gemma-4-31b-it'
+    ];
 
-      if (geminiKey.trim().startsWith('AQ.')) {
-        headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
-        headers['x-goog-api-key'] = geminiKey.trim();
-      } else {
-        url += `?key=${geminiKey.trim()}`;
-      }
+    for (const modelCandidate of modelsToTry) {
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/${modelCandidate}:generateContent`;
 
-      let response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: SYSTEM_PROMPT }]
-          },
-          contents: contentsPayload,
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 500
-          }
-        })
-      });
+        if (geminiKey.trim().startsWith('AQ.')) {
+          headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
+          headers['x-goog-api-key'] = geminiKey.trim();
+        } else {
+          url += `?key=${geminiKey.trim()}`;
+        }
 
-      // If rate limited (HTTP 429), wait 1.2s and retry once
-      if (response.status === 429) {
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        response = await fetch(url, {
+        const response = await fetch(url, {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -132,22 +122,28 @@ export default async function handler(req, res) {
             }
           })
         });
-      }
 
-      if (response.ok) {
-        const data = await response.json();
-        const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (geminiReply) {
-          return res.status(200).json({
-            reply: geminiReply.trim(),
-            poweredBy: 'Google Gemini AI'
-          });
+        if (response.ok) {
+          const data = await response.json();
+          let geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!geminiReply && data.candidates?.[0]?.content?.parts) {
+            const textPart = data.candidates[0].content.parts.find(p => p.text && !p.thought);
+            if (textPart) geminiReply = textPart.text;
+          }
+          if (geminiReply) {
+            return res.status(200).json({
+              reply: geminiReply.trim(),
+              poweredBy: 'Google Gemini AI'
+            });
+          }
+        } else {
+          console.warn(`Model ${modelCandidate} returned status ${response.status}, failing over to next model...`);
+          geminiErrorDebug = `Gemini HTTP ${response.status}`;
         }
-      } else {
-        const errText = await response.text();
-        console.error(`Gemini API Error ${response.status}:`, errText);
-        geminiErrorDebug = `Gemini HTTP ${response.status}`;
+      } catch (err) {
+        console.error(`Model ${modelCandidate} error:`, err.message);
       }
+    }
     } catch (geminiErr) {
       console.error('Gemini fetch error:', geminiErr.message);
       geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
