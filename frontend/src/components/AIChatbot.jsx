@@ -117,7 +117,15 @@ export default function AIChatbot() {
     }));
 
     try {
-      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      let backendUrl = import.meta.env.VITE_API_URL;
+      if (!backendUrl) {
+        if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          backendUrl = 'http://localhost:5000';
+        } else {
+          backendUrl = '';
+        }
+      }
+
       const res = await fetch(`${backendUrl}/api/chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -155,7 +163,7 @@ export default function AIChatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans">
+    <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-[9999] font-sans">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -163,7 +171,7 @@ export default function AIChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.94 }}
             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-            className="w-[92vw] sm:w-[440px] md:w-[480px] h-[620px] max-h-[82vh] rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden mb-4"
+            className="w-[calc(100vw-1.5rem)] sm:w-[440px] md:w-[480px] h-[calc(100vh-6.5rem)] sm:h-[620px] max-h-[640px] rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden mb-2 sm:mb-4"
           >
             {/* Header */}
             <div className="px-5 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white flex items-center justify-between shadow-md">
