@@ -63,9 +63,11 @@ export default async function handler(req, res) {
 
   const geminiKey = process.env.GEMINI_API_KEY;
   const openAiKey = process.env.OPENAI_API_KEY;
+  let geminiErrorDebug = "";
 
-  // 1. Try Google Gemini AI API (100% FREE FOREVER)
-  if (geminiKey && geminiKey.trim() !== '' && !geminiKey.includes('your_gemini')) {
+  if (!geminiKey || geminiKey.trim() === '' || geminiKey.includes('your_gemini')) {
+    geminiErrorDebug = "GEMINI_API_KEY missing in Vercel Env Vars";
+  } else {
     try {
       const contentsPayload = [];
 
@@ -112,9 +114,14 @@ export default async function handler(req, res) {
             poweredBy: 'Google Gemini AI'
           });
         }
+      } else {
+        const errText = await response.text();
+        console.error(`Gemini API Error ${response.status}:`, errText);
+        geminiErrorDebug = `Gemini HTTP ${response.status}`;
       }
     } catch (geminiErr) {
       console.error('Gemini fetch error:', geminiErr.message);
+      geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
     }
   }
 
@@ -225,5 +232,8 @@ export default async function handler(req, res) {
             "• How to hire him or contact him directly!";
   }
 
-  return res.status(200).json({ reply, poweredBy: 'Smart Rule Matching' });
+  return res.status(200).json({ 
+    reply, 
+    poweredBy: geminiErrorDebug ? `Smart Rule Matching (${geminiErrorDebug})` : 'Smart Rule Matching' 
+  });
 }
