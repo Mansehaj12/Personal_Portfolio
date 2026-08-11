@@ -49,6 +49,13 @@ export default function Navbar() {
           </button>
 
           <button 
+            onClick={() => scrollToSection('achievements')} 
+            className="text-[11px] sm:text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+          >
+            Certifications
+          </button>
+
+          <button 
             onClick={() => scrollToSection('contact')} 
             className="hidden sm:inline-block px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
           >
