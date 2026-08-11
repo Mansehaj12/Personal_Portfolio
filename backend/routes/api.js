@@ -234,7 +234,7 @@ router.post('/chatbot', async (req, res) => {
         parts: [{ text: message }]
       });
 
-      const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+      const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiKey.trim()}`;
 
       const response = await fetch(url, {
