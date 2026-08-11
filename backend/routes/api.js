@@ -178,6 +178,8 @@ PORTFOLIO CONTEXT & KNOWLEDGE BASE:
   2. **MediSmart**: AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.
   3. **PowerMRO**: Industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).
   4. **GameIQ**: ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on 90,000+ gamer dataset.
+  5. **Robust Weather & Environmental Dashboard**: Responsive asynchronous weather dashboard fetching environmental metrics via OpenWeather REST API with input-guard caching via localStorage.
+  6. **Real-Time Financial Converter Engine**: Web application utilizing ExchangeRate API to execute real-time currency conversions across 150+ international assets with 4-decimal precision.
 - **Technical Skills**:
   - Languages: Python, JavaScript, C/C++, SQL, Java, R, C# (.NET)
   - Data Science & ML: Pandas, NumPy, Scikit-learn, PyTorch, XGBoost, Random Forest, Exploratory Data Analysis (EDA)
@@ -330,6 +332,8 @@ router.post('/chatbot', async (req, res) => {
             "2. **MediSmart**: An AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.\n" +
             "3. **PowerMRO**: An industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).\n" +
             "4. **GameIQ**: An ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on a dataset of 90,000+ gamers.\n" +
+            "5. **Robust Weather & Environmental Dashboard**: Asynchronous API tracker fetching environmental metrics via OpenWeather REST API with input-guard localStorage caching.\n" +
+            "6. **Real-Time Financial Converter Engine**: Web application executing real-time currency conversions across 150+ international assets.\n" +
             "Which of these projects would you like to know more about?";
   } 
   else if (lower.includes('skill') || lower.includes('language') || lower.includes('stack') || lower.includes('python') || lower.includes('javascript') || lower.includes('c++') || lower.includes('sql') || lower.includes('java')) {
