@@ -34,6 +34,17 @@
 }
 
 @layer utilities {
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .dark .glassmorphism {
+    background: rgba(9, 9, 11, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
   /* Diagonal split clip-path for hero section (desktop only) */
   @media (min-width: 768px) {
     .clip-diagonal {

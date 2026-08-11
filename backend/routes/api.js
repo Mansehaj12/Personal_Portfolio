@@ -163,19 +163,109 @@ router.get('/visitor', async (req, res) => {
 });
 
 // ----------------------------------------------------
-// 3. AI CHATBOT ENDPOINT
+// 3. AI CHATBOT ENDPOINT (Powered by OpenAI LLM + Smart Fallback)
 // ----------------------------------------------------
-router.post('/chatbot', (req, res) => {
-  const { message } = req.body;
+const SYSTEM_PROMPT = `
+You are the AI Recruiter & Technical Assistant for Mansehaj Preet Singh's personal portfolio website.
+Your mission is to synthesize user and recruiter queries into structured, actionable, and clear responses in real-time.
+
+PORTFOLIO CONTEXT & KNOWLEDGE BASE:
+- **Full Name**: Mansehaj Preet Singh
+- **Current Education**: Bachelor of Engineering (B.E.) in Computer Engineering (COE) at Thapar Institute of Engineering and Technology (TIET), Patiala, Punjab. Expected graduation: May 2027.
+- **Target Roles**: Open & actively seeking Quality Engineering, Software Engineering, or Data Science / Machine Learning Internships.
+- **Key Projects**:
+  1. **CareerLens**: AI-powered job market intelligence & placement probability SaaS with interactive what-if simulation dials & PDF resume gap analyzers (Ridge Regression, Decision Trees).
+  2. **MediSmart**: AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.
+  3. **PowerMRO**: Industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).
+  4. **GameIQ**: ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on 90,000+ gamer dataset.
+- **Technical Skills**:
+  - Languages: Python, JavaScript, C/C++, SQL, Java, R, C# (.NET)
+  - Data Science & ML: Pandas, NumPy, Scikit-learn, PyTorch, XGBoost, Random Forest, Exploratory Data Analysis (EDA)
+  - Backend & APIs: Node.js, Express, Flask, FastAPI, REST APIs, OpenAI API
+  - Frontend & Viz: React.js, Next.js, Tailwind CSS, Recharts, Framer Motion
+  - Databases: MySQL, PostgreSQL, MongoDB
+- **Key Achievements**:
+  - Kaggle Expert tier status (globally ranked competitor, 80% progress towards Kaggle Master).
+  - NVIDIA Deep Learning Institute (DLI) Certified in Fundamentals of Deep Learning.
+  - Solved 200+ advanced DSA problems on LeetCode & GeeksforGeeks.
+- **Contact Details**:
+  - Email: sehajpreetsingh480@gmail.com
+  - Phone: +91-78886-55097
+  - LinkedIn: https://linkedin.com/in/mansehajpreet
+  - GitHub: https://github.com/Mansehaj12
+
+RESPONSE GUIDELINES:
+- Be enthusiastic, professional, structured, and concise (under 180 words unless explicitly asked for detail).
+- Use Markdown bold headers and bullet points for readability.
+- If recruiters ask why they should hire Mansehaj, highlight his dual expertise in Web Development + Data Science/ML, Kaggle Expert credentials, and strong problem-solving mindset.
+- Always provide actionable contact info (email / contact form) when relevant.
+`;
+
+router.post('/chatbot', async (req, res) => {
+  const { message, history } = req.body;
 
   if (!message || message.trim() === '') {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
+  const apiKey = process.env.OPENAI_API_KEY;
+  console.log(`[Chatbot] Received query: "${message}". OpenAI Key present: ${!!apiKey}`);
+
+  // Try calling OpenAI API if key exists
+  if (apiKey && apiKey.trim() !== '' && !apiKey.includes('your_openai')) {
+    try {
+      console.log('[Chatbot] Invoking OpenAI API...');
+      const messagesPayload = [
+        { role: 'system', content: SYSTEM_PROMPT }
+      ];
+
+      // Attach brief history if provided
+      if (Array.isArray(history) && history.length > 0) {
+        history.slice(-4).forEach(item => {
+          if (item.role && item.content) {
+            messagesPayload.push({ role: item.role, content: item.content });
+          }
+        });
+      }
+
+      messagesPayload.push({ role: 'user', content: message });
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey.trim()}`
+        },
+        body: JSON.stringify({
+          model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+          messages: messagesPayload,
+          max_tokens: 350,
+          temperature: 0.7
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const aiReply = data.choices?.[0]?.message?.content;
+        if (aiReply) {
+          return res.json({ 
+            reply: aiReply.trim(), 
+            poweredBy: 'OpenAI LLM' 
+          });
+        }
+      } else {
+        const errorBody = await response.text();
+        console.warn(`OpenAI API status ${response.status}:`, errorBody);
+      }
+    } catch (err) {
+      console.error('OpenAI fetch error (falling back to keyword engine):', err.message);
+    }
+  }
+
+  // Fallback Rule-Based Engine
   const lower = message.toLowerCase();
   let reply = "";
 
-  // Keyword Matching Router
   if (lower.includes('project') || lower.includes('careerlens') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('weather') || lower.includes('currency') || lower.includes('code') || lower.includes('build')) {
     reply = "Mansehaj has built several impressive engineering and data science projects: \n" +
             "1. **CareerLens**: An AI-powered job market intelligence and predictive placement SaaS with real-time what-if simulation dials and PDF resume gap analyzers.\n" +
@@ -227,7 +317,7 @@ router.post('/chatbot', (req, res) => {
             "• How to hire him or contact him directly!";
   }
 
-  res.json({ reply });
+  return res.json({ reply, poweredBy: 'Smart Rule Matching' });
 });
 
 module.exports = router;

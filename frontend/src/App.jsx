@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
+import AIChatbot from './components/AIChatbot';
 
 // Sections
 import Hero from './sections/Hero';
@@ -38,6 +39,9 @@ export default function App() {
             <Projects />
             <Contact />
           </main>
+
+          {/* AI Chatbot Floating Launcher */}
+          <AIChatbot />
 
           {/* Minimal footer */}
           <Footer />

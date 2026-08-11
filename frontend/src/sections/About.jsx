@@ -75,10 +75,10 @@ export default function About() {
           
           <div className="space-y-4 text-sm sm:text-base leading-relaxed">
             <p>
-              I am a Computer Engineering undergraduate student at **Thapar Institute of Engineering and Technology (TIET)** (Class of 2027), Patiala, Punjab. I have hands-on experience building end-to-end data-driven applications, robust REST APIs, and machine learning pipelines.
+              I am a Computer Engineering undergraduate student at <strong className="font-semibold text-black dark:text-white">Thapar Institute of Engineering and Technology (TIET)</strong> (Class of 2027), Patiala, Punjab. I have hands-on experience building end-to-end data-driven applications, robust REST APIs, and machine learning pipelines.
             </p>
             <p>
-              I am a ranked **Kaggle Expert** (approaching the Master tier in Datasets and Notebooks tracks) and **NVIDIA-certified in the Fundamentals of Deep Learning**. I enjoy writing clean, test-validated scripts in Python and JavaScript to automate complex workflows and solve logical problems.
+              I am a ranked <strong className="font-semibold text-black dark:text-white">Kaggle Expert</strong> (approaching the Master tier in Datasets and Notebooks tracks) and <strong className="font-semibold text-black dark:text-white">NVIDIA-certified in the Fundamentals of Deep Learning</strong>. I enjoy writing clean, test-validated scripts in Python and JavaScript to automate complex workflows and solve logical problems.
             </p>
           </div>
 
