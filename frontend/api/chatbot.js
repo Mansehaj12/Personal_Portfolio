@@ -102,7 +102,7 @@ export default async function handler(req, res) {
         url += `?key=${geminiKey.trim()}`;
       }
 
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -116,6 +116,25 @@ export default async function handler(req, res) {
           }
         })
       });
+
+      // If rate limited (HTTP 429), wait 1.2s and retry once
+      if (response.status === 429) {
+        await new Promise(resolve => setTimeout(resolve, 1200));
+        response = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: SYSTEM_PROMPT }]
+            },
+            contents: contentsPayload,
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 350
+            }
+          })
+        });
+      }
 
       if (response.ok) {
         const data = await response.json();
