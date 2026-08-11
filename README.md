@@ -2,7 +2,7 @@
 
 Welcome to the official repository for the personal developer, computer vision, and machine learning portfolio website of **Mansehaj Preet Singh** (Computer Engineering student at Thapar Institute of Engineering & Technology, Patiala, Punjab). 
 
-This document details the architecture, technology stack, project catalog, database fallback mechanisms, and local setup guide.
+This document details the architecture, technology stack, project catalog, database fallback mechanisms, multi-model AI pipeline, and local setup guide.
 
 ---
 
@@ -19,61 +19,63 @@ This document details the architecture, technology stack, project catalog, datab
 
 ## 🗺️ System Architecture
 
-The project is structured as a decoupled **Client-Server (MERN-lite)** architecture with an interactive modal system and multi-tier AI recruiter assistant.
+The project is structured as a decoupled **Client-Server (MERN-lite)** architecture with zero-config **Vercel Serverless Functions** and an instant **Multi-Model AI Failover Pipeline**.
 
 ```mermaid
 graph TD
     %% Frontend Components
-    subgraph Frontend [Vite React Client - Port 5173]
+    subgraph Frontend [Vite React Client / Mobile Browser]
         UI[Navbar, Hero, About, Skills, Projects Grid, Contact]
         CompactGrid[2-Column Compact Projects Grid]
         ArchModal[Full System Architecture Modal Component]
         Form[Contact Form Component]
         VisitorBadge[Visitor Counter Widget]
-        ChatWidget[AI Recruiter Chatbot - Formatted Markdown & Links]
+        ChatWidget[AI Recruiter Chatbot - Responsive Mobile Container]
     end
 
-    %% Backend Controllers
-    subgraph Backend [Express API Server - Port 5000]
-        API[Routes Router: /api]
+    %% Vercel Serverless & Express
+    subgraph Backend [Vercel Serverless Functions / Express Server]
+        VercelAPI[Native Vercel Serverless: /api/chatbot]
+        ExpressAPI[Express API Router: /api]
         ContactCtrl[POST /api/contact]
         VisitorCtrl[GET /api/visitor]
-        ChatCtrl[POST /api/chatbot]
-        Nodemailer[Nodemailer SMTP Manager]
     end
 
-    %% Infrastructure & AI Services
-    subgraph Infrastructure [Data & AI Services]
-        Gemini[Google Gemini AI API - gemini-2.5-flash - 100% FREE]
-        OpenAI[OpenAI LLM API - gpt-4o-mini]
-        SmartRules[Smart Keyword Rule Engine - Fallback]
+    %% Multi-Model AI Failover Pipeline
+    subgraph MultiModelAI [Google AI Studio Multi-Model Failover Pipeline]
+        Model1[gemini-flash-latest - Primary High-Capacity Model]
+        Model2[gemini-2.5-flash - Secondary Model]
+        Model3[gemini-3.5-flash - Tertiary Model]
+        Model4[gemma-4-31b-it - Open Weights Model]
+        SmartRules[Smart Keyword Rule Engine - Safety Fallback]
+    end
+
+    %% Databases & Services
+    subgraph Services [Databases & Infrastructure]
         Mongo[(MongoDB Database)]
         JSONFallback[(database_fallback.json)]
-        Gmail[Google SMTP Services]
+        Gmail[Nodemailer SMTP Service]
     end
 
     %% Connections
-    UI -->|Renders| CompactGrid
-    CompactGrid -->|Click Card / Link| ArchModal
     UI -->|Loads page| VisitorBadge
     VisitorBadge -->|GET /api/visitor| VisitorCtrl
     Form -->|POST /api/contact| ContactCtrl
-    ChatWidget -->|POST /api/chatbot| ChatCtrl
+    ChatWidget -->|POST /api/chatbot| VercelAPI
 
-    %% AI Pipeline Logic
-    ChatCtrl -->|Primary AI Query| Gemini
-    ChatCtrl -.->|Secondary AI Query| OpenAI
-    ChatCtrl -.->|Graceful Fallback| SmartRules
+    %% AI Pipeline Failover Execution
+    VercelAPI -->|1. Try Model 1| Model1
+    Model1 -.->|If 429 / Quota| Model2
+    Model2 -.->|If 429 / Quota| Model3
+    Model3 -.->|If 429 / Quota| Model4
+    Model4 -.->|If Unavailable| SmartRules
 
-    %% DB Logic
+    %% DB & Contact Logic
     ContactCtrl -->|Attempt Save| Mongo
     ContactCtrl -.->|Fallback Save| JSONFallback
     VisitorCtrl -->|Increment / Fetch| Mongo
     VisitorCtrl -.->|Fallback Read/Write| JSONFallback
-
-    %% SMTP Logic
-    ContactCtrl -->|If SMTP Auth Present| Nodemailer
-    Nodemailer -->|Send Secure Gmail Alert| Gmail
+    ContactCtrl -->|Send Secure Gmail Alert| Gmail
 ```
 
 ---
@@ -82,16 +84,17 @@ graph TD
 
 ### 1. Frontend
 *   **Vite + React.js (v19)**: Selected for lightning-fast Hot Module Replacement (HMR) and lightweight production bundles.
-*   **Tailwind CSS (v3)**: Custom responsive grid configurations, spacing scales, and glassmorphism utilities.
-*   **Lucide React**: Modern, scalable icon sets (`Sparkles`, `Cpu`, `Layers`, `Eye`, `Github`, `ChevronDown`).
+*   **Tailwind CSS (v3)**: Custom responsive grid configurations, mobile container bounds (`max-w-[calc(100vw-1.5rem)]`), spacing scales, and glassmorphism utilities.
+*   **Lucide React**: Modern, scalable icon sets (`Sparkles`, `Cpu`, `Layers`, `Eye`, `Github`, `ChevronDown`, `Bot`, `User`).
 *   **Framer Motion**: Smooth entry/exit transitions, collapsible inline height animations, and modal popups.
 *   **Custom System Architecture Modal**: Dedicated modal dialog (`ProjectModal.jsx`) providing step-by-step layer/module pipelines, performance metrics, and source links.
 *   **Canvas Confetti**: Triggers success particle bursts when the user submits a message through the contact form.
 
-### 2. Backend & AI Services
-*   **Google Gemini AI API (`gemini-2.5-flash`)**: Primary 100% free AI model providing real-time prompt synthesis and recruiter question answering.
-*   **OpenAI LLM API (`gpt-4o-mini`)**: Secondary LLM integration for contextual query synthesis.
-*   **Express (Node.js)**: Standard server framework handling API routing, CORS handling, and JSON parsing.
+### 2. Backend & Multi-Model AI Pipeline
+*   **Google Gemini AI API (`gemini-flash-latest`)**: Primary 100% free AI model providing real-time prompt synthesis and recruiter question answering.
+*   **Multi-Model Quota Failover**: Automatically loops across `gemini-flash-latest` ➔ `gemini-2.5-flash` ➔ `gemini-3.5-flash` ➔ `gemma-4-31b-it`. If any single model hits a 1-second rate limit, the system instantly switches to an independent model quota.
+*   **Vercel Serverless Functions (`api/chatbot.js`)**: Zero-config API route mapping handling high-concurrency requests with CORS headers.
+*   **Express (Node.js)**: Standard server framework handling local development routing, CORS, and JSON parsing.
 *   **Nodemailer**: Connects directly to Google's SMTP servers to forward contact form inquiries to the developer.
 *   **Mongoose**: Object-Document Mapping (ODM) layer for database operations in MongoDB.
 
@@ -105,8 +108,8 @@ graph TD
 *   **Inline Expand Toggle**: Clicking the chevron toggle allows quick inline expansion directly on the page.
 
 ### 2. AI-Powered Recruiter Assistant
-*   **System Prompt Context**: Infused with complete developer background (TIET COE Class of 2027, Capstone ODD Framework, *CareerLens*, *MediSmart*, *PowerMRO*, *GameIQ*, Kaggle Expert status).
-*   **Multi-Tier Fallback Engine**: Shifts down gracefully: **Google Gemini AI -> OpenAI LLM -> Smart Rule Matching**.
+*   **System Prompt Context**: Infused with complete developer background (TIET COE Class of 2027, Capstone ODD Framework, *CareerLens*, *MediSmart*, *PowerMRO*, *GameIQ*, *Weather Dashboard*, *Financial Converter*, Kaggle Expert status).
+*   **Multi-Tier Fallback Engine**: Shifts down gracefully across model quotas and defaults to Smart Rule Matching if network connectivity is severed.
 
 ### 3. Failure-Resilient Backend
 *   If MongoDB is offline, the backend logs a warning and shifts into **Local JSON Fallback Mode** (`database_fallback.json`), ensuring zero frontend runtime crashes.
@@ -130,7 +133,7 @@ RECEIVER_EMAIL=sehajpreetsingh480@gmail.com
 
 # 100% Free Google Gemini AI Key
 GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-flash-latest
 ```
 
 ### 3. Installation
