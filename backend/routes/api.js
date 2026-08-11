@@ -174,7 +174,8 @@ PORTFOLIO CONTEXT & KNOWLEDGE BASE:
 - **Current Education**: Bachelor of Engineering (B.E.) in Computer Engineering (COE) at Thapar Institute of Engineering and Technology (TIET), Patiala, Punjab. Expected graduation: May 2027.
 - **Target Roles**: Open & actively seeking Quality Engineering, Software Engineering, or Data Science / Machine Learning Internships.
 - **Key Projects**:
-  1. **CareerLens**: AI-powered job market intelligence & placement probability SaaS with interactive what-if simulation dials & PDF resume gap analyzers (Ridge Regression, Decision Trees).
+  1. **Capstone Project: Scenario-Based ODD Safety Framework for Autonomous Vehicles**: Perception-to-action safety pipeline for autonomous vehicles in Indian road environments (IDD-Lite). Integrates PyTorch SegNet semantic segmentation (AMP CUDA acceleration), YOLOv8 object detection, GPU weather perturbation simulations (fog/rain/contrast), and an interactive Leaflet.js dashboard evaluating real-time 18-feature Operational Design Domain (ODD) safety metrics and SAE Level 3 disengagement rules.
+  2. **CareerLens**: AI-powered job market intelligence & placement probability SaaS with interactive what-if simulation dials & PDF resume gap analyzers (Ridge Regression, Decision Trees).
   2. **MediSmart**: AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.
   3. **PowerMRO**: Industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).
   4. **GameIQ**: ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on 90,000+ gamer dataset.
@@ -326,14 +327,15 @@ router.post('/chatbot', async (req, res) => {
   const lower = message.toLowerCase();
   let reply = "";
 
-  if (lower.includes('project') || lower.includes('careerlens') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('weather') || lower.includes('currency') || lower.includes('code') || lower.includes('build')) {
+  if (lower.includes('project') || lower.includes('capstone') || lower.includes('odd') || lower.includes('careerlens') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('weather') || lower.includes('currency') || lower.includes('code') || lower.includes('build')) {
     reply = "Mansehaj has built several impressive engineering and data science projects: \n" +
-            "1. **CareerLens**: An AI-powered job market intelligence and predictive placement SaaS with real-time what-if simulation dials and PDF resume gap analyzers.\n" +
-            "2. **MediSmart**: An AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.\n" +
-            "3. **PowerMRO**: An industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).\n" +
-            "4. **GameIQ**: An ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on a dataset of 90,000+ gamers.\n" +
-            "5. **Robust Weather & Environmental Dashboard**: Asynchronous API tracker fetching environmental metrics via OpenWeather REST API with input-guard localStorage caching.\n" +
-            "6. **Real-Time Financial Converter Engine**: Web application executing real-time currency conversions across 150+ international assets.\n" +
+            "1. **Capstone Project: Scenario-Based ODD Safety Framework**: Perception-to-action safety pipeline for autonomous driving on Indian road environments combining PyTorch SegNet semantic segmentation, YOLOv8, GPU weather perturbation simulations, and Leaflet.js ODD scoring engine.\n" +
+            "2. **CareerLens**: An AI-powered job market intelligence and predictive placement SaaS with real-time what-if simulation dials and PDF resume gap analyzers.\n" +
+            "3. **MediSmart**: An AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.\n" +
+            "4. **PowerMRO**: An industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).\n" +
+            "5. **GameIQ**: An ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on a dataset of 90,000+ gamers.\n" +
+            "6. **Robust Weather & Environmental Dashboard**: Asynchronous API tracker fetching environmental metrics via OpenWeather REST API with input-guard localStorage caching.\n" +
+            "7. **Real-Time Financial Converter Engine**: Web application executing real-time currency conversions across 150+ international assets.\n" +
             "Which of these projects would you like to know more about?";
   } 
   else if (lower.includes('skill') || lower.includes('language') || lower.includes('stack') || lower.includes('python') || lower.includes('javascript') || lower.includes('c++') || lower.includes('sql') || lower.includes('java')) {

@@ -1,20 +1,33 @@
 # 🎓 Mansehaj Preet Singh - Developer Portfolio Website
 
-Welcome to the project repository for the personal developer and data science portfolio website of **Mansehaj Preet Singh** (Computer Engineering student at TIET, Patiala, Punjab). 
+Welcome to the official repository for the personal developer, computer vision, and machine learning portfolio website of **Mansehaj Preet Singh** (Computer Engineering student at Thapar Institute of Engineering & Technology, Patiala, Punjab). 
 
-This document serves as a comprehensive blueprint of the project, detailing the architecture, technology stack, design decisions, database fallback mechanisms, and local setup guide.
+This document details the architecture, technology stack, project catalog, database fallback mechanisms, and local setup guide.
+
+---
+
+## 🚀 Key Highlights & Featured Capstone Project
+
+### 🌟 Capstone Project: Scenario-Based ODD Safety Framework for Autonomous Vehicles
+*   **Perception & Safety Engine**: End-to-end safety evaluation pipeline for autonomous driving on Indian road environments using the IDD-Lite dataset.
+*   **Deep Learning Segmentation & Detection**: Integrates PyTorch **SegNet** (3-layer encoder-decoder with Batch Normalization & PyTorch AMP CUDA acceleration) paired with **YOLOv8** target detection.
+*   **GPU Weather Perturbation Engine**: Real-time GPU tensor transformations simulating radial fog ($T(x) = e^{-\delta_{ec} \cdot d(x)}$), camera contrast drops, heavy rain, and noise interference.
+*   **SAE Level 3 Dynamic ODD Scoring Engine**: Evaluates 18 environmental & road-condition parameters to calculate real-time ODD safety scores (L3 Green $\ge 70$, L2 Orange $40-69$, L1 Red $<40$) and trigger disengagement alerts (reduced false disengagement alarms by 350+ count).
+*   **Interactive Spatial Dashboard**: Leaflet.js GeoJSON road network updating spatial automation readiness across city road clusters.
 
 ---
 
 ## 🗺️ System Architecture
 
-The project is structured as a decoupled **Client-Server (MERN-lite)** architecture. The frontend React application communicates with the backend Express API via REST endpoints, allowing contact details to be stored and forwarded, visitor counts to be updated, and chatbot prompts to be resolved dynamically.
+The project is structured as a decoupled **Client-Server (MERN-lite)** architecture with an interactive modal system and multi-tier AI recruiter assistant.
 
 ```mermaid
 graph TD
     %% Frontend Components
     subgraph Frontend [Vite React Client - Port 5173]
-        UI[Navbar, Hero, About, Projects, Contact]
+        UI[Navbar, Hero, About, Skills, Projects Grid, Contact]
+        CompactGrid[2-Column Compact Projects Grid]
+        ArchModal[Full System Architecture Modal Component]
         Form[Contact Form Component]
         VisitorBadge[Visitor Counter Widget]
         ChatWidget[AI Recruiter Chatbot - Formatted Markdown & Links]
@@ -40,6 +53,8 @@ graph TD
     end
 
     %% Connections
+    UI -->|Renders| CompactGrid
+    CompactGrid -->|Click Card / Link| ArchModal
     UI -->|Loads page| VisitorBadge
     VisitorBadge -->|GET /api/visitor| VisitorCtrl
     Form -->|POST /api/contact| ContactCtrl
@@ -68,9 +83,9 @@ graph TD
 ### 1. Frontend
 *   **Vite + React.js (v19)**: Selected for lightning-fast Hot Module Replacement (HMR) and lightweight production bundles.
 *   **Tailwind CSS (v3)**: Custom responsive grid configurations, spacing scales, and glassmorphism utilities.
-*   **Lucide React**: Modern, scalable icon sets for social indicators and navigation buttons.
-*   **Framer Motion**: Smooth entry and exit transitions, floating 3D card stacks, and button micro-interactions.
-*   **Custom Markdown & Link Parser**: Parses bold formatting and renders clickable hyperlinks in real-time within the AI assistant.
+*   **Lucide React**: Modern, scalable icon sets (`Sparkles`, `Cpu`, `Layers`, `Eye`, `Github`, `ChevronDown`).
+*   **Framer Motion**: Smooth entry/exit transitions, collapsible inline height animations, and modal popups.
+*   **Custom System Architecture Modal**: Dedicated modal dialog (`ProjectModal.jsx`) providing step-by-step layer/module pipelines, performance metrics, and source links.
 *   **Canvas Confetti**: Triggers success particle bursts when the user submits a message through the contact form.
 
 ### 2. Backend & AI Services
@@ -79,29 +94,22 @@ graph TD
 *   **Express (Node.js)**: Standard server framework handling API routing, CORS handling, and JSON parsing.
 *   **Nodemailer**: Connects directly to Google's SMTP servers to forward contact form inquiries to the developer.
 *   **Mongoose**: Object-Document Mapping (ODM) layer for database operations in MongoDB.
-*   **Dotenv**: Separates sensitive keys (Gemini API tokens, OpenAI tokens, Gmail SMTP tokens, MongoDB URI strings) from source code.
 
 ---
 
-## 🎨 Design Approach & Decisions
+## 🎨 Design Approach & Features
 
-### 1. AI-Powered Recruiter Assistant
-Constructed an AI-powered conversational assistant that synthesizes complex recruiter/visitor queries into structured, actionable responses in real-time:
-*   **System Prompt Context**: Infused with complete developer background (TIET COE Class of 2027, *CareerLens*, *MediSmart*, *PowerMRO*, *GameIQ*, Kaggle Expert status, NVIDIA DLI certification).
-*   **Multi-Tier Fallback Engine**: If an API key is missing or quota limits occur, the API seamlessly shifts down: **Google Gemini AI -> OpenAI LLM -> Smart Rule Matching**.
-*   **Comfy Glassmorphism UI**: Spacious 480px popup modal with custom markdown formatting, hyperlinked URLs, and badge indicators (`✨ Google Gemini AI`).
+### 1. Compact 2-Column Grid & Click-to-Open Architecture Modal
+*   **Short Format Layout**: Replaced traditional long paragraph vertical stacks with a responsive 2-column compact grid, reducing scroll height by over 60%.
+*   **Full System Architecture Modal**: Clicking any project card opens a rich glassmorphic modal displaying step-by-step execution pipelines (Layer 1 to Layer 5), metrics, tech stacks, and source links.
+*   **Inline Expand Toggle**: Clicking the chevron toggle allows quick inline expansion directly on the page.
 
-### 2. High-Contrast Minimalism & Interactive 3D Card Deck
-The portfolio layout combines crisp typography with dynamic interactive media:
-*   **Split-Screen Layout**: A diagonal desktop grid divide consisting of a cream-beige accent block on the left and a deep obsidian block on the right.
-*   **3D Parallax Hero Deck**: Interactive mouse-tilt photo stack showcasing 3 distinct developer portraits (`pprofile.JPG`, `IMG_5355.JPG`, `IMG_1385.JPG`).
-*   **Clean About Section**: Styled typography highlighting academic milestones and technical certifications.
+### 2. AI-Powered Recruiter Assistant
+*   **System Prompt Context**: Infused with complete developer background (TIET COE Class of 2027, Capstone ODD Framework, *CareerLens*, *MediSmart*, *PowerMRO*, *GameIQ*, Kaggle Expert status).
+*   **Multi-Tier Fallback Engine**: Shifts down gracefully: **Google Gemini AI -> OpenAI LLM -> Smart Rule Matching**.
 
 ### 3. Failure-Resilient Backend
-To ensure the website remains fully interactive even during local inspections where MongoDB is offline, the backend features a custom local storage fallback:
-*   Upon startup, the server tries to connect to the local MongoDB database.
-*   If the database connection fails or times out, the backend logs a warning and shifts into **Local JSON Fallback Mode**.
-*   All visitor counts and contact form submissions are written locally to [database_fallback.json](file:///C:/Users/HP/OneDrive/Desktop/Codes/Projects%20All/Portfolio/backend/database_fallback.json). The API continues returning HTTP `201` and `200` statuses, preventing frontend crashes.
+*   If MongoDB is offline, the backend logs a warning and shifts into **Local JSON Fallback Mode** (`database_fallback.json`), ensuring zero frontend runtime crashes.
 
 ---
 
@@ -112,7 +120,7 @@ To ensure the website remains fully interactive even during local inspections wh
 *   *Optional*: Free Gemini API Key from [aistudio.google.com](https://aistudio.google.com).
 
 ### 2. Setup Environment Config
-Verify that your credentials are set up inside the [backend/.env](file:///C:/Users/HP/OneDrive/Desktop/Codes/Projects%20All/Portfolio/backend/.env) file:
+Verify credentials inside `backend/.env`:
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/portfolio
@@ -120,22 +128,17 @@ EMAIL_USER=sehajpreetsingh480@gmail.com
 EMAIL_PASS=your_app_password
 RECEIVER_EMAIL=sehajpreetsingh480@gmail.com
 
-# 100% Free Google Gemini AI Key (from https://aistudio.google.com)
+# 100% Free Google Gemini AI Key
 GEMINI_API_KEY=your_gemini_api_key
 GEMINI_MODEL=gemini-2.5-flash
-
-# Optional OpenAI Key
-OPENAI_API_KEY=your_openai_api_key
 ```
 
 ### 3. Installation
-To install all required packages across both frontend and backend modules simultaneously, run this command from the root directory:
 ```bash
 npm run install-all
 ```
 
-### 4. Running the Development Server
-Launch the frontend and backend servers concurrently:
+### 4. Running Development Server
 ```bash
 npm run dev
 ```
