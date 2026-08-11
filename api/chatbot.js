@@ -89,11 +89,19 @@ export default async function handler(req, res) {
       });
 
       const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiKey.trim()}`;
+      const headers = { 'Content-Type': 'application/json' };
+      let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+
+      if (geminiKey.trim().startsWith('AQ.')) {
+        headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
+        headers['x-goog-api-key'] = geminiKey.trim();
+      } else {
+        url += `?key=${geminiKey.trim()}`;
+      }
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           system_instruction: {
             parts: [{ text: SYSTEM_PROMPT }]
