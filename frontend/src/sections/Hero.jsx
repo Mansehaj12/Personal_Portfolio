@@ -186,7 +186,7 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Card 1: Nature Mode (IMG_6932 Copy.JPG) - Floating Bottom-Left */}
+            {/* Card 1: Nature Mode (IMG_5355.JPG) - Floating Bottom-Left */}
             <motion.div
               style={{ 
                 x: card1_X, 
@@ -206,12 +206,12 @@ export default function Hero() {
             >
               <div className="w-full h-[85%] rounded-lg overflow-hidden bg-zinc-950">
                 <img 
-                  src="/IMG_6932 Copy.JPG" 
+                  src="/IMG_5355.JPG" 
                   alt="Mansehaj Outdoors Look" 
                   className="w-full h-full object-cover transition-transform duration-500"
                   style={{
-                    transform: hoveredCard === 1 ? 'scale(1.15)' : 'scale(1.05)',
-                    transformOrigin: 'center center'
+                    transform: hoveredCard === 1 ? 'scale(1.58)' : 'scale(1.5)',
+                    transformOrigin: '72% 62%'
                   }}
                 />
               </div>
@@ -220,7 +220,7 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Card 2: Formal Mode (profile.jpg) - Floating Center-Front */}
+            {/* Card 2: Formal Mode (IMG_1385.JPG) - Floating Center-Front */}
             <motion.div
               style={{ 
                 x: card2_X, 
@@ -240,7 +240,7 @@ export default function Hero() {
             >
               <div className="w-full h-[85%] rounded-xl overflow-hidden bg-zinc-950">
                 <img 
-                  src="/profile.jpg" 
+                  src="/IMG_1385.JPG" 
                   alt="Mansehaj Professional Suit" 
                   className={`w-full h-full object-cover object-[center_12%] transition-transform duration-500 ${
                     hoveredCard === 2 ? 'scale-105' : 'scale-100'
