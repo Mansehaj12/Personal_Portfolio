@@ -61,6 +61,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
+  const grokKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
   const fallbackGeminiKey = Buffer.from('QUl6YVN5QVJybld0a0RnYnVhWFhHS3NBd1NYeEJRNFFUN2NDdGtn', 'base64').toString('utf-8');
   let geminiKey = process.env.GEMINI_API_KEY;
   if (!geminiKey || geminiKey.trim() === '' || geminiKey.trim().startsWith('AQ.') || geminiKey.includes('your_gemini')) {
@@ -68,6 +69,52 @@ export default async function handler(req, res) {
   }
   const openAiKey = process.env.OPENAI_API_KEY;
   let geminiErrorDebug = "";
+
+  // 1. Try xAI Grok API if key exists
+  if (grokKey && grokKey.trim() !== '' && !grokKey.includes('your_grok')) {
+    try {
+      const messagesPayload = [
+        { role: 'system', content: SYSTEM_PROMPT }
+      ];
+
+      if (Array.isArray(history) && history.length > 0) {
+        history.slice(-4).forEach(item => {
+          if (item.role && item.content) {
+            messagesPayload.push({ role: item.role, content: item.content });
+          }
+        });
+      }
+
+      messagesPayload.push({ role: 'user', content: message });
+
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${grokKey.trim()}`
+        },
+        body: JSON.stringify({
+          model: process.env.GROK_MODEL || 'grok-2-mini',
+          messages: messagesPayload,
+          max_tokens: 350,
+          temperature: 0.7
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const grokReply = data.choices?.[0]?.message?.content;
+        if (grokReply) {
+          return res.status(200).json({
+            reply: grokReply.trim(),
+            poweredBy: 'xAI Grok'
+          });
+        }
+      }
+    } catch (grokErr) {
+      console.error('Grok fetch error:', grokErr.message);
+    }
+  }
 
   if (!geminiKey || geminiKey.trim() === '' || geminiKey.includes('your_gemini')) {
     geminiErrorDebug = "GEMINI_API_KEY missing in Vercel Env Vars";
