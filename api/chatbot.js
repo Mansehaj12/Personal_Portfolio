@@ -17,7 +17,7 @@ PORTFOLIO CONTEXT & KNOWLEDGE BASE:
 - **Technical Skills**:
   - Languages: Python, JavaScript, C/C++, SQL, Java, R, C# (.NET)
   - Data Science & ML: Pandas, NumPy, Scikit-learn, PyTorch, XGBoost, Random Forest, Exploratory Data Analysis (EDA)
-  - Backend & APIs: Node.js, Express, Flask, FastAPI, REST APIs, OpenAI API, Google Gemini API
+  - Backend & APIs: Node.js, Express, Flask, FastAPI, REST APIs, Google Gemini API
   - Frontend & Viz: React.js, Next.js, Tailwind CSS, Recharts, Framer Motion
   - Databases: MySQL, PostgreSQL, MongoDB
 - **Key Achievements**:
@@ -61,97 +61,63 @@ export default async function handler(req, res) {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
-  const grokKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
   const fallbackGeminiKey = Buffer.from('QUl6YVN5QVJybld0a0RnYnVhWFhHS3NBd1NYeEJRNFFUN2NDdGtn', 'base64').toString('utf-8');
   let geminiKey = process.env.GEMINI_API_KEY;
   if (!geminiKey || geminiKey.trim() === '' || geminiKey.trim().startsWith('AQ.') || geminiKey.includes('your_gemini')) {
     geminiKey = fallbackGeminiKey;
   }
-  const openAiKey = process.env.OPENAI_API_KEY;
   let geminiErrorDebug = "";
 
-  // 1. Try xAI Grok API if key exists
-  if (grokKey && grokKey.trim() !== '' && !grokKey.includes('your_grok')) {
-    try {
-      const messagesPayload = [
-        { role: 'system', content: SYSTEM_PROMPT }
-      ];
+  // 1. Query Google Gemini AI API (100% FREE FOREVER)
+  try {
+    const contentsPayload = [];
 
-      if (Array.isArray(history) && history.length > 0) {
-        history.slice(-4).forEach(item => {
-          if (item.role && item.content) {
-            messagesPayload.push({ role: item.role, content: item.content });
-          }
-        });
-      }
-
-      messagesPayload.push({ role: 'user', content: message });
-
-      const response = await fetch('https://api.x.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${grokKey.trim()}`
-        },
-        body: JSON.stringify({
-          model: process.env.GROK_MODEL || 'grok-2-mini',
-          messages: messagesPayload,
-          max_tokens: 350,
-          temperature: 0.7
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const grokReply = data.choices?.[0]?.message?.content;
-        if (grokReply) {
-          return res.status(200).json({
-            reply: grokReply.trim(),
-            poweredBy: 'xAI Grok'
+    if (Array.isArray(history) && history.length > 0) {
+      history.slice(-4).forEach(item => {
+        if (item.role && item.content) {
+          contentsPayload.push({
+            role: item.role === 'user' ? 'user' : 'model',
+            parts: [{ text: item.content }]
           });
         }
-      }
-    } catch (grokErr) {
-      console.error('Grok fetch error:', grokErr.message);
-    }
-  }
-
-  // 2. Query Google Gemini AI API
-
-  if (!geminiKey || geminiKey.trim() === '' || geminiKey.includes('your_gemini')) {
-    geminiErrorDebug = "GEMINI_API_KEY missing in Vercel Env Vars";
-  } else {
-    try {
-      const contentsPayload = [];
-
-      if (Array.isArray(history) && history.length > 0) {
-        history.slice(-4).forEach(item => {
-          if (item.role && item.content) {
-            contentsPayload.push({
-              role: item.role === 'user' ? 'user' : 'model',
-              parts: [{ text: item.content }]
-            });
-          }
-        });
-      }
-
-      contentsPayload.push({
-        role: 'user',
-        parts: [{ text: message }]
       });
+    }
 
-      const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-      const headers = { 'Content-Type': 'application/json' };
-      let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+    contentsPayload.push({
+      role: 'user',
+      parts: [{ text: message }]
+    });
 
-      if (geminiKey.trim().startsWith('AQ.')) {
-        headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
-        headers['x-goog-api-key'] = geminiKey.trim();
-      } else {
-        url += `?key=${geminiKey.trim()}`;
-      }
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const headers = { 'Content-Type': 'application/json' };
+    let url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
 
-      let response = await fetch(url, {
+    if (geminiKey.trim().startsWith('AQ.')) {
+      headers['Authorization'] = `Bearer ${geminiKey.trim()}`;
+      headers['x-goog-api-key'] = geminiKey.trim();
+    } else {
+      url += `?key=${geminiKey.trim()}`;
+    }
+
+    let response = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: SYSTEM_PROMPT }]
+        },
+        contents: contentsPayload,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 350
+        }
+      })
+    });
+
+    // If rate limited (HTTP 429), wait 1.2s and retry once
+    if (response.status === 429) {
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      response = await fetch(url, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -165,93 +131,28 @@ export default async function handler(req, res) {
           }
         })
       });
+    }
 
-      // If rate limited (HTTP 429), wait 1.2s and retry once
-      if (response.status === 429) {
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        response = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [{ text: SYSTEM_PROMPT }]
-            },
-            contents: contentsPayload,
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 350
-            }
-          })
+    if (response.ok) {
+      const data = await response.json();
+      const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (geminiReply) {
+        return res.status(200).json({
+          reply: geminiReply.trim(),
+          poweredBy: 'Google Gemini AI'
         });
       }
-
-      if (response.ok) {
-        const data = await response.json();
-        const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (geminiReply) {
-          return res.status(200).json({
-            reply: geminiReply.trim(),
-            poweredBy: 'Google Gemini AI'
-          });
-        }
-      } else {
-        const errText = await response.text();
-        console.error(`Gemini API Error ${response.status}:`, errText);
-        geminiErrorDebug = `Gemini HTTP ${response.status}`;
-      }
-    } catch (geminiErr) {
-      console.error('Gemini fetch error:', geminiErr.message);
-      geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
+    } else {
+      const errText = await response.text();
+      console.error(`Gemini API Error ${response.status}:`, errText);
+      geminiErrorDebug = `Gemini HTTP ${response.status}`;
     }
+  } catch (geminiErr) {
+    console.error('Gemini fetch error:', geminiErr.message);
+    geminiErrorDebug = `Gemini Err: ${geminiErr.message}`;
   }
 
-  // 2. Try OpenAI API if key exists
-  if (openAiKey && openAiKey.trim() !== '' && !openAiKey.includes('your_openai')) {
-    try {
-      const messagesPayload = [
-        { role: 'system', content: SYSTEM_PROMPT }
-      ];
-
-      if (Array.isArray(history) && history.length > 0) {
-        history.slice(-4).forEach(item => {
-          if (item.role && item.content) {
-            messagesPayload.push({ role: item.role, content: item.content });
-          }
-        });
-      }
-
-      messagesPayload.push({ role: 'user', content: message });
-
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openAiKey.trim()}`
-        },
-        body: JSON.stringify({
-          model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-          messages: messagesPayload,
-          max_tokens: 350,
-          temperature: 0.7
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const aiReply = data.choices?.[0]?.message?.content;
-        if (aiReply) {
-          return res.status(200).json({ 
-            reply: aiReply.trim(), 
-            poweredBy: 'OpenAI LLM' 
-          });
-        }
-      }
-    } catch (err) {
-      console.error('OpenAI fetch error:', err.message);
-    }
-  }
-
-  // 3. Fallback Smart Rule Engine
+  // 2. Fallback Smart Rule Engine
   const lower = message.toLowerCase();
   let reply = "";
 
@@ -270,7 +171,7 @@ export default async function handler(req, res) {
     reply = "Mansehaj is highly skilled across multiple developer stacks:\n" +
             "• **Languages**: Python, JavaScript, C/C++, SQL, R, Java, C# (.NET)\n" +
             "• **Data Science & ML**: Pandas, NumPy, Scikit-learn, PyTorch, Random Forest, XGBoost, Exploratory Data Analysis (EDA)\n" +
-            "• **Backend & APIs**: Node.js, Express, Flask, FastAPI, REST APIs, OpenAI API, Gemini API\n" +
+            "• **Backend & APIs**: Node.js, Express, Flask, FastAPI, REST APIs, Google Gemini API\n" +
             "• **Frontend & Viz**: Next.js, React.js, Tailwind CSS, Recharts, Matplotlib, Seaborn\n" +
             "• **Databases**: MySQL, PostgreSQL, MongoDB\n" +
             "He is also certified by the NVIDIA Deep Learning Institute!";
