@@ -110,7 +110,7 @@ export default async function handler(req, res) {
           contents: contentsPayload,
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 350
+            maxOutputTokens: 2500
           }
         })
       });
@@ -128,7 +128,7 @@ export default async function handler(req, res) {
             contents: contentsPayload,
             generationConfig: {
               temperature: 0.7,
-              maxOutputTokens: 350
+              maxOutputTokens: 2500
             }
           })
         });
