@@ -62,7 +62,10 @@ export default async function handler(req, res) {
   }
 
   const fallbackGeminiKey = Buffer.from('QUl6YVN5QVJybld0a0RnYnVhWFhHS3NBd1NYeEJRNFFUN2NDdGtn', 'base64').toString('utf-8');
-  const geminiKey = process.env.GEMINI_API_KEY || fallbackGeminiKey;
+  let geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey || geminiKey.trim() === '' || geminiKey.trim().startsWith('AQ.') || geminiKey.includes('your_gemini')) {
+    geminiKey = fallbackGeminiKey;
+  }
   const openAiKey = process.env.OPENAI_API_KEY;
   let geminiErrorDebug = "";
 
