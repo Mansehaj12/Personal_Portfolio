@@ -208,18 +208,76 @@ router.post('/chatbot', async (req, res) => {
     return res.status(400).json({ reply: "Hello! I am Mansehaj's portfolio assistant. Feel free to type a question or select a quick option." });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  console.log(`[Chatbot] Received query: "${message}". OpenAI Key present: ${!!apiKey}`);
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const openAiKey = process.env.OPENAI_API_KEY;
 
-  // Try calling OpenAI API if key exists
-  if (apiKey && apiKey.trim() !== '' && !apiKey.includes('your_openai')) {
+  // 1. Try Google Gemini AI API (100% FREE FOREVER from aistudio.google.com)
+  if (geminiKey && geminiKey.trim() !== '' && !geminiKey.includes('your_gemini')) {
+    try {
+      console.log('[Chatbot] Invoking 100% Free Google Gemini API...');
+      const contentsPayload = [];
+
+      // Format conversation history for Gemini
+      if (Array.isArray(history) && history.length > 0) {
+        history.slice(-4).forEach(item => {
+          if (item.role && item.content) {
+            contentsPayload.push({
+              role: item.role === 'user' ? 'user' : 'model',
+              parts: [{ text: item.content }]
+            });
+          }
+        });
+      }
+
+      contentsPayload.push({
+        role: 'user',
+        parts: [{ text: message }]
+      });
+
+      const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiKey.trim()}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: SYSTEM_PROMPT }]
+          },
+          contents: contentsPayload,
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 350
+          }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const geminiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (geminiReply) {
+          return res.json({
+            reply: geminiReply.trim(),
+            poweredBy: 'Google Gemini AI'
+          });
+        }
+      } else {
+        const errorText = await response.text();
+        console.warn(`Gemini API error ${response.status}:`, errorText);
+      }
+    } catch (geminiErr) {
+      console.error('Gemini fetch error (falling through):', geminiErr.message);
+    }
+  }
+
+  // 2. Try OpenAI API if key exists
+  if (openAiKey && openAiKey.trim() !== '' && !openAiKey.includes('your_openai')) {
     try {
       console.log('[Chatbot] Invoking OpenAI API...');
       const messagesPayload = [
         { role: 'system', content: SYSTEM_PROMPT }
       ];
 
-      // Attach brief history if provided
       if (Array.isArray(history) && history.length > 0) {
         history.slice(-4).forEach(item => {
           if (item.role && item.content) {
@@ -234,7 +292,7 @@ router.post('/chatbot', async (req, res) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey.trim()}`
+          'Authorization': `Bearer ${openAiKey.trim()}`
         },
         body: JSON.stringify({
           model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
