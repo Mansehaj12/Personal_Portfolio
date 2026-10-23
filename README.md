@@ -10,7 +10,7 @@ This document details the architecture, technology stack, project catalog, datab
 
 ### 🌟 Capstone Project: Scenario-Based ODD Safety Framework for Autonomous Vehicles
 *   **Perception & Safety Engine**: End-to-end safety evaluation pipeline for autonomous driving on Indian road environments using the IDD-Lite dataset.
-*   **Deep Learning Segmentation & Detection**: Integrates PyTorch **SegNet** (3-layer encoder-decoder with Batch Normalization & PyTorch AMP CUDA acceleration) paired with **YOLOv8** target detection.
+*   **Deep Learning Segmentation**: Integrates PyTorch **SegNet** (3-layer encoder-decoder with Batch Normalization & PyTorch AMP CUDA acceleration) paired with **YOLOv8** target detection.
 *   **GPU Weather Perturbation Engine**: Real-time GPU tensor transformations simulating radial fog ($T(x) = e^{-\delta_{ec} \cdot d(x)}$), camera contrast drops, heavy rain, and noise interference.
 *   **SAE Level 3 Dynamic ODD Scoring Engine**: Evaluates 18 environmental & road-condition parameters to calculate real-time ODD safety scores (L3 Green $\ge 70$, L2 Orange $40-69$, L1 Red $<40$) and trigger disengagement alerts (reduced false disengagement alarms by 350+ count).
 *   **Interactive Spatial Dashboard**: Leaflet.js GeoJSON road network updating spatial automation readiness across city road clusters.
