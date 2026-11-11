@@ -1,149 +1,169 @@
-# 🎓 Mansehaj Preet Singh - Developer Portfolio Website
+# ✦ Mansehaj Preet Singh — Personal Portfolio & Technical Archive
 
-Welcome to the official repository for the personal developer, computer vision, and machine learning portfolio website of **Mansehaj Preet Singh** (Computer Engineering student at Thapar Institute of Engineering & Technology, Patiala, Punjab). 
+> **Computer Engineering undergraduate at Thapar Institute of Engineering & Technology (TIET), Patiala (Class of 2027)**  
+> *Autonomous Systems • Computer Vision • Predictive Machine Learning • Full-Stack Web Applications*
 
-This document details the architecture, technology stack, project catalog, database fallback mechanisms, multi-model AI pipeline, and local setup guide.
-
----
-
-## 🚀 Key Highlights & Featured Capstone Project
-
-### 🌟 Capstone Project: Scenario-Based ODD Safety Framework for Autonomous Vehicles
-*   **Perception & Safety Engine**: End-to-end safety evaluation pipeline for autonomous driving on Indian road environments using the IDD-Lite dataset.
-*   **Deep Learning Segmentation**: Integrates PyTorch **SegNet** (3-layer encoder-decoder with Batch Normalization & PyTorch AMP CUDA acceleration) paired with **YOLOv8** target detection.
-*   **GPU Weather Perturbation Engine**: Real-time GPU tensor transformations simulating radial fog ($T(x) = e^{-\delta_{ec} \cdot d(x)}$), camera contrast drops, heavy rain, and noise interference.
-*   **SAE Level 3 Dynamic ODD Scoring Engine**: Evaluates 18 environmental & road-condition parameters to calculate real-time ODD safety scores (L3 Green $\ge 70$, L2 Orange $40-69$, L1 Red $<40$) and trigger disengagement alerts (reduced false disengagement alarms by 350+ count).
-*   **Interactive Spatial Dashboard**: Leaflet.js GeoJSON road network updating spatial automation readiness across city road clusters.
+[![GitHub](https://img.shields.io/badge/GitHub-Mansehaj12-111110?style=flat-square&logo=github)](https://github.com/Mansehaj12)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-mansehajpreet-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mansehajpreet)
+[![Kaggle](https://img.shields.io/badge/Kaggle-Global%20Expert-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/sehaj1104)
+[![License: MIT](https://img.shields.io/badge/License-MIT-F97316?style=flat-square)](LICENSE)
 
 ---
 
-## 🗺️ System Architecture
+## 📖 Overview
 
-The project is structured as a decoupled **Client-Server (MERN-lite)** architecture with zero-config **Vercel Serverless Functions** and an instant **Multi-Model AI Failover Pipeline**.
+This repository houses the personal portfolio website of **Mansehaj Preet Singh**. Designed with a warm cream editorial aesthetic inspired by modern award-winning personal sites, the portfolio delivers an ultra-smooth browsing experience powered by **Lenis physics momentum scrolling**, categorized project showcases, an interactive skills matrix, and a verified credentials vault.
 
-```mermaid
-graph TD
-    %% Frontend Components
-    subgraph Frontend [Vite React Client / Mobile Browser]
-        UI[Navbar, Hero, About, Skills, Projects Grid, Contact]
-        CompactGrid[2-Column Compact Projects Grid]
-        ArchModal[Full System Architecture Modal Component]
-        Form[Contact Form Component]
-        VisitorBadge[Visitor Counter Widget]
-        ChatWidget[AI Recruiter Chatbot - Responsive Mobile Container]
-    end
+### 🌟 Key Highlights & Accolades
+* **Kaggle Global Expert**: Ranked in the top tier globally across Datasets & Notebooks for open data engineering and algorithmic modeling benchmarks.
+* **NVIDIA Certified**: Deep learning competence verified by the NVIDIA Deep Learning Institute (DLI) for neural network architectures, transfer learning, and CUDA GPU acceleration.
+* **Featured Capstone**: *Scenario-Based ODD Safety Framework for Automation in Indian Road Environments* (PyTorch SegNet + YOLOv8 + CARLA + Leaflet.js).
+* **Commercial Client Deployments**: Production PWAs and e-commerce platforms engineered for live regional businesses (*Divine Cafe*, *The Home Delight Bakery*, *FlawlessTips by MK*).
 
-    %% Vercel Serverless & Express
-    subgraph Backend [Vercel Serverless Functions / Express Server]
-        VercelAPI[Native Vercel Serverless: /api/chatbot]
-        ExpressAPI[Express API Router: /api]
-        ContactCtrl[POST /api/contact]
-        VisitorCtrl[GET /api/visitor]
-    end
+---
 
-    %% Multi-Model AI Failover Pipeline
-    subgraph MultiModelAI [Google AI Studio Multi-Model Failover Pipeline]
-        Model1[gemini-flash-latest - Primary High-Capacity Model]
-        Model2[gemini-2.5-flash - Secondary Model]
-        Model3[gemini-3.5-flash - Tertiary Model]
-        Model4[gemma-4-31b-it - Open Weights Model]
-        SmartRules[Smart Keyword Rule Engine - Safety Fallback]
-    end
+## 🎨 Visual Design & Interaction Architecture
 
-    %% Databases & Services
-    subgraph Services [Databases & Infrastructure]
-        Mongo[(MongoDB Database)]
-        JSONFallback[(database_fallback.json)]
-        Gmail[Nodemailer SMTP Service]
-    end
+| Design Element | Specification |
+| :--- | :--- |
+| **Color Palette** | Warm Cream Canvas (`#F2EFE9`), Deep Ink Charcoal (`#111110`), Subtle Borders (`rgba(17,17,16,0.12)`), Energetic Orange Accent (`#F97316`) |
+| **Typography** | **Space Grotesk** (Headlines & UI), **Instrument Serif Italic** (Editorial Warmth & Emphasis), **JetBrains Mono** (Code & Telemetry) |
+| **Smooth Scrolling** | **Lenis** inertia-weighted smooth momentum scrolling with exponential ease-out curve (`Math.min(1, 1.001 - 2^(-10t))`) |
+| **Modal Isolation** | Scroll hijacking prevention via `data-lenis-prevent="true"`, wheel stop propagation, and automated Lenis bounds resizing |
+| **Background Grid** | Fixed SVG radial dot canvas overlay matching minimalist Swiss editorial layouts |
 
-    %% Connections
-    UI -->|Loads page| VisitorBadge
-    VisitorBadge -->|GET /api/visitor| VisitorCtrl
-    Form -->|POST /api/contact| ContactCtrl
-    ChatWidget -->|POST /api/chatbot| VercelAPI
+---
 
-    %% AI Pipeline Failover Execution
-    VercelAPI -->|1. Try Model 1| Model1
-    Model1 -.->|If 429 / Quota| Model2
-    Model2 -.->|If 429 / Quota| Model3
-    Model3 -.->|If 429 / Quota| Model4
-    Model4 -.->|If Unavailable| SmartRules
+## 📁 Sections & System Features
 
-    %% DB & Contact Logic
-    ContactCtrl -->|Attempt Save| Mongo
-    ContactCtrl -.->|Fallback Save| JSONFallback
-    VisitorCtrl -->|Increment / Fetch| Mongo
-    VisitorCtrl -.->|Fallback Read/Write| JSONFallback
-    ContactCtrl -->|Send Secure Gmail Alert| Gmail
+### 1. Hero & Photographic Showcase (`Hero.jsx`)
+* **Editorial Typography**: Hero title combining bold Swiss grotesk with cursive serif-italic accents (`singh`).
+* **Multi-Frame Photo Card**: Interactive photo frame switcher showcasing portrait moments with smooth dot controls.
+* **Live Time Indicator**: Real-time IST (Patiala, Punjab) timezone telemetry tracker.
+* **Infinite Marquee Ticker**: Continuous high-contrast marquee ribbon highlighting core stack keywords (`PyTorch`, `YOLOv8`, `SegNet`, `React.js`, `Flask`, `PostgreSQL`, etc.).
+
+### 2. Categorized Projects Showcase (`Projects.jsx` & `ProjectModal.jsx`)
+Organized into 3 dedicated domain sections with interactive filter pills:
+
 ```
+├── 01 // AI, Computer Vision & Autonomous Systems (4 Projects)
+│   ├── Scenario-Based ODD Safety Framework (Capstone: SegNet + YOLOv8 + CARLA)
+│   ├── CareerLens: AI Job Intelligence & Predictive Placement Analytics (Ridge + NLP)
+│   ├── GameIQ: Player Churn Prediction & Analytics Pipeline (Random Forest, 90k logs)
+│   └── MediSmart: AI-Assisted E-Pharmacy & Generic Swap Portal (Tesseract.js OCR)
+│
+├── 02 // Production & Commercial Client Products (3 Projects)
+│   ├── Divine Cafe: Installable PWA & 1-Tap WhatsApp Ordering (52 Dishes, Offline Cache)
+│   ├── The Home Delight Bakery: Festive Hamper Catalogue & QR Generator
+│   └── FlawlessTips by MK: Luxury Nail Studio SaaS & Booking Portal (Next.js 16 + Prisma)
+│
+└── 03 // Data Telemetry & Systems Utilities (3 Projects)
+    ├── PowerMRO: High-Frequency Industrial Telemetry & RUL Estimator (<15ms latency)
+    ├── Robust Weather & Environmental Dashboard (Async REST API & LocalStorage Caching)
+    └── Real-Time Financial Converter Engine (150+ Currencies Live Exchange Rates)
+```
+* **Deep-Dive System Architecture Modal**: Step-by-step 5-layer execution pipelines, key performance metrics, and verified GitHub/live demo links.
+
+### 3. Background & Academic Journey (`About.jsx`)
+* **Direct & Honest Narrative**: Clean, grounded biography free of generic buzzwords.
+* **Origin & Present Contrast**: Side-by-side photo studio contrast comparing childhood roots (`Origin • 2004`) with present engineering pursuits (`Present • 2026`).
+* **Education Timeline**: Academic history spanning Thapar Institute (COE), Senior Secondary (PSEB), and Secondary (CBSE).
+
+### 4. Interactive Skills Matrix (`Skills.jsx`)
+* **Horizontal Matrix Layout**: Minimalist list inspired by modern design portfolios, split into 5 core competencies:
+  1. `01` **Languages**: Python, C / C++, JavaScript (ES6+), TypeScript, SQL, R, HTML5, CSS3
+  2. `02` **Frontend & UI**: React.js, Next.js 16, Tailwind CSS, Framer Motion, PWA, Leaflet.js, GeoJSON, Recharts
+  3. `03` **Backend & Data**: Flask, Node.js, Express, FastAPI, PostgreSQL, MySQL, SQLite, Prisma ORM, Firebase Auth, REST APIs
+  4. `04` **AI & ML**: PyTorch, TensorFlow, scikit-learn, YOLOv8, SegNet, OpenCV, CARLA Simulator, Transfer Learning, Neural Networks, CUDA Acceleration
+  5. `05` **Data & Analytics**: pandas, NumPy, Matplotlib, Seaborn, Git & GitHub, GitHub Actions, PyTest, Postman, Jupyter, Kaggle CLI
+* **Dynamic Hover Animation**: Hovering any category smoothly transforms the row into an inky black capsule card (`bg-[#111110]`), morphing the category number into a solid bright orange disc with inverted badges.
+* **Curriculum Modal**: Complete 7-semester Computer Engineering curriculum scheme from Thapar Institute (Sem 1 to Sem 7) accessible via an interactive popup drawer.
+
+### 5. Verified Credentials Vault (`Achievements.jsx`)
+* **Flagship Highlights on Page**: Spotlight card for Kaggle Global Expert status + 4 top certifications (NVIDIA Deep Learning Institute, IBM Generative AI, Deloitte Data Analytics, IBM Python Analytics).
+* **Full 18-Certificate Interactive Vault**: Popup modal cataloging all 18 authentic credentials across Deep Learning, Data Science, and Cloud Big Data, featuring real-time category filtering, search, and embedded in-browser PDF preview.
+
+### 6. AI Recruiter Assistant (`AIChatbot.jsx`)
+* **Google Gemini AI Integration**: Multi-model failover engine (`gemini-flash-latest` ➔ `gemini-2.5-flash` ➔ `gemini-3.5-flash` ➔ `gemma-4-31b-it`).
+* **Comprehensive System Prompt**: Knowledgeable about Mansehaj's projects, coursework, metrics, and Kaggle standings.
+* **Standalone Serverless Endpoint**: Vercel-ready serverless function in `api/chatbot.js` for zero-configuration cloud deployment.
+
+### 7. Global Command Palette (`CommandPalette.jsx`)
+* Accessible globally via `Ctrl + K` (or `Cmd + K` on macOS).
+* Provides rapid keyboard navigation across sections, instant resume downloading, and direct links.
 
 ---
 
 ## 🛠️ Technology Stack
 
-### 1. Frontend
-*   **Vite + React.js (v19)**: Selected for lightning-fast Hot Module Replacement (HMR) and lightweight production bundles.
-*   **Tailwind CSS (v3)**: Custom responsive grid configurations, mobile container bounds (`max-w-[calc(100vw-1.5rem)]`), spacing scales, and glassmorphism utilities.
-*   **Lucide React**: Modern, scalable icon sets (`Sparkles`, `Cpu`, `Layers`, `Eye`, `Github`, `ChevronDown`, `Bot`, `User`).
-*   **Framer Motion**: Smooth entry/exit transitions, collapsible inline height animations, and modal popups.
-*   **Custom System Architecture Modal**: Dedicated modal dialog (`ProjectModal.jsx`) providing step-by-step layer/module pipelines, performance metrics, and source links.
-*   **Canvas Confetti**: Triggers success particle bursts when the user submits a message through the contact form.
+```
+Frontend:
+├── React.js 19 (Component Hierarchy)
+├── Vite 8 (Ultra-Fast Bundler & HMR)
+├── Tailwind CSS 3 (Utility-First Styling)
+├── Framer Motion 12 (Fluid Layout Animations)
+├── Lenis (Physics Smooth Momentum Scroll)
+└── Lucide React (Minimalist Iconography)
 
-### 2. Backend & Multi-Model AI Pipeline
-*   **Google Gemini AI API (`gemini-flash-latest`)**: Primary 100% free AI model providing real-time prompt synthesis and recruiter question answering.
-*   **Multi-Model Quota Failover**: Automatically loops across `gemini-flash-latest` ➔ `gemini-2.5-flash` ➔ `gemini-3.5-flash` ➔ `gemma-4-31b-it`. If any single model hits a 1-second rate limit, the system instantly switches to an independent model quota.
-*   **Vercel Serverless Functions (`api/chatbot.js`)**: Zero-config API route mapping handling high-concurrency requests with CORS headers.
-*   **Express (Node.js)**: Standard server framework handling local development routing, CORS, and JSON parsing.
-*   **Nodemailer**: Connects directly to Google's SMTP servers to forward contact form inquiries to the developer.
-*   **Mongoose**: Object-Document Mapping (ODM) layer for database operations in MongoDB.
-
----
-
-## 🎨 Design Approach & Features
-
-### 1. Compact 2-Column Grid & Click-to-Open Architecture Modal
-*   **Short Format Layout**: Replaced traditional long paragraph vertical stacks with a responsive 2-column compact grid, reducing scroll height by over 60%.
-*   **Full System Architecture Modal**: Clicking any project card opens a rich glassmorphic modal displaying step-by-step execution pipelines (Layer 1 to Layer 5), metrics, tech stacks, and source links.
-*   **Inline Expand Toggle**: Clicking the chevron toggle allows quick inline expansion directly on the page.
-
-### 2. AI-Powered Recruiter Assistant
-*   **System Prompt Context**: Infused with complete developer background (TIET COE Class of 2027, Capstone ODD Framework, *CareerLens*, *MediSmart*, *PowerMRO*, *GameIQ*, *Weather Dashboard*, *Financial Converter*, Kaggle Expert status).
-*   **Multi-Tier Fallback Engine**: Shifts down gracefully across model quotas and defaults to Smart Rule Matching if network connectivity is severed.
-
-### 3. Failure-Resilient Backend
-*   If MongoDB is offline, the backend logs a warning and shifts into **Local JSON Fallback Mode** (`database_fallback.json`), ensuring zero frontend runtime crashes.
-
----
-
-## 🚀 Setup & Launch Instructions
-
-### 1. Prerequisites
-*   [Node.js](https://nodejs.org/) (v18.x or above)
-*   *Optional*: Free Gemini API Key from [aistudio.google.com](https://aistudio.google.com).
-
-### 2. Setup Environment Config
-Verify credentials inside `backend/.env`:
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/portfolio
-EMAIL_USER=sehajpreetsingh480@gmail.com
-EMAIL_PASS=your_app_password
-RECEIVER_EMAIL=sehajpreetsingh480@gmail.com
-
-# 100% Free Google Gemini AI Key
-GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-flash-latest
+Backend & Serverless:
+├── Node.js & Express (Local Dev Server)
+├── Vercel Serverless Functions (/api/chatbot.js)
+├── Google Gemini API (Multi-Model Quota Failover)
+├── Nodemailer (Automated Email Dispatch)
+└── Mongoose / Local JSON (Resilient Data Storage)
 ```
 
-### 3. Installation
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
 ```bash
+git clone https://github.com/Mansehaj12/Personal_Portfolio.git
+cd Personal_Portfolio
+```
+
+### 2. Install Dependencies
+```bash
+# Install root, backend, and frontend packages in one command
 npm run install-all
 ```
 
-### 4. Running Development Server
+### 3. Environment Variables
+Create a `.env` file inside the `backend` directory (optional for local chatbot AI features):
+```env
+PORT=5000
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+RECEIVER_EMAIL=your_email@gmail.com
+
+# Google Gemini API Key (Free from https://aistudio.google.com)
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### 4. Run Development Server
 ```bash
 npm run dev
 ```
-*   **Frontend UI**: [http://localhost:5173/](http://localhost:5173/)
-*   **Backend Server**: [http://localhost:5000/](http://localhost:5000/)
+* **Frontend Web App**: `http://localhost:5173/`
+* **Backend API**: `http://localhost:5000/`
+
+### 5. Build for Production
+```bash
+npm run build --prefix frontend
+```
+
+---
+
+## 📬 Contact & Connect
+
+* **Developer**: Mansehaj Preet Singh
+* **Email**: [sehajpreetsingh480@gmail.com](mailto:sehajpreetsingh480@gmail.com)
+* **Location**: Patiala, Punjab, India
+* **GitHub**: [@Mansehaj12](https://github.com/Mansehaj12)
+* **LinkedIn**: [linkedin.com/in/mansehajpreet](https://linkedin.com/in/mansehajpreet)
+* **Kaggle**: [kaggle.com/sehaj1104](https://www.kaggle.com/sehaj1104)
+
+---
+
+&copy; 2026 Mansehaj Preet Singh. Released under the [MIT License](LICENSE).
