@@ -92,36 +92,53 @@ export default function Contact() {
 
 
   return (
-    <section id="contact" className="py-20 px-6 sm:px-12 bg-[#FAF7F0] dark:bg-zinc-900 font-sans">
+    <section id="contact" className="py-24 px-6 sm:px-12 bg-transparent font-sans border-b border-[rgba(17,17,16,0.1)] relative">
       <motion.div 
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
       >
         
         {/* Left Side: Header (Spans 4 columns) */}
-        <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
-          <h2 className="text-3xl font-black uppercase tracking-tight text-black dark:text-white border-b-4 border-black dark:border-white pb-3 inline-block">
-            Contact
+        <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-4">
+          <span className="font-mono text-xs font-bold text-[#6B6862] tracking-wider uppercase">
+            [ 05 // GET IN TOUCH ]
+          </span>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+            Let's Start a <br />
+            <span className="serif-i text-4xl sm:text-5xl lg:text-6xl text-[#111110]">
+              Conversation
+            </span>
           </h2>
-          <p className="text-xs text-neutral-500 max-w-xs leading-relaxed">
-            Collaborating on software systems or data intelligence projects? Get in touch instantly.
+
+          <p className="text-xs sm:text-sm text-[#6B6862] max-w-xs leading-relaxed">
+            Interested in collaborating on autonomous systems, data pipelines, or software platforms? Send a message directly.
           </p>
 
           {/* Quick Details List */}
-          <div className="space-y-3 pt-6 border-t border-slate-200/50 dark:border-zinc-800">
-            <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-zinc-400">
-              <Mail size={14} className="text-neutral-500" />
-              <span>sehajpreetsingh480@gmail.com</span>
+          <div className="space-y-3 pt-6 border-t border-[rgba(17,17,16,0.1)]">
+            <a 
+              href="mailto:sehajpreetsingh480@gmail.com" 
+              className="flex items-center gap-3 text-xs text-[#111110] hover:text-[#F97316] transition-colors group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-white border border-[rgba(17,17,16,0.12)] flex items-center justify-center shadow-2xs group-hover:border-[#111110]">
+                <Mail size={14} className="text-[#F97316]" />
+              </div>
+              <span className="font-mono">sehajpreetsingh480@gmail.com</span>
+            </a>
+            <div className="flex items-center gap-3 text-xs text-[#111110]">
+              <div className="w-8 h-8 rounded-lg bg-white border border-[rgba(17,17,16,0.12)] flex items-center justify-center shadow-2xs">
+                <Phone size={14} className="text-[#111110]" />
+              </div>
+              <span className="font-mono">+91-78886-55097</span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-zinc-400">
-              <Phone size={14} className="text-neutral-500" />
-              <span>+91-78886-55097</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-neutral-600 dark:text-zinc-400">
-              <MapPin size={14} className="text-neutral-500" />
+            <div className="flex items-center gap-3 text-xs text-[#111110]">
+              <div className="w-8 h-8 rounded-lg bg-white border border-[rgba(17,17,16,0.12)] flex items-center justify-center shadow-2xs">
+                <MapPin size={14} className="text-[#111110]" />
+              </div>
               <span>Patiala, Punjab, India</span>
             </div>
           </div>
@@ -129,7 +146,7 @@ export default function Contact() {
 
         {/* Right Side: Input Form (Spans 8 columns) */}
         <div className="lg:col-span-8">
-          <GlassCard className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 sm:p-8">
+          <GlassCard className="p-6 sm:p-8 bg-white">
             <AnimatePresence mode="wait">
               {status === 'success' ? (
                 <motion.div
@@ -138,16 +155,16 @@ export default function Contact() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="flex flex-col items-center justify-center text-center space-y-4 py-8"
                 >
-                  <CheckCircle2 size={40} className="text-emerald-500" />
+                  <CheckCircle2 size={40} className="text-[#F97316]" />
                   <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-black dark:text-white uppercase tracking-wider">Message Transmitted</h3>
-                    <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
+                    <h3 className="text-base font-bold text-[#111110] tracking-tight">Message Delivered</h3>
+                    <p className="text-xs text-[#6B6862] max-w-xs mx-auto leading-relaxed">
                       {statusMessage}
                     </p>
                   </div>
                   <button
                     onClick={() => setStatus('idle')}
-                    className="px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+                    className="px-5 py-2 text-xs font-semibold text-[#111110] border border-[#111110] rounded-full hover:bg-[#111110] hover:text-[#F2EFE9] transition-colors cursor-pointer"
                   >
                     Send Another Message
                   </button>
@@ -161,61 +178,61 @@ export default function Contact() {
                   className="space-y-4"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-[10px] uppercase font-bold tracking-wider text-neutral-500">Your Name</label>
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#6B6862]">Your Name</label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-black text-black dark:text-white transition-all"
-                        placeholder="Enter name"
+                        className="w-full bg-[#F2EFE9]/40 border border-[rgba(17,17,16,0.12)] rounded-xl px-4 py-2.5 text-xs text-[#111110] placeholder-[#6B6862]/60 focus:outline-none focus:border-[#111110] focus:bg-white transition-all"
+                        placeholder="e.g. Alex Morgan"
                       />
-                      {errors.name && <span className="text-[9px] text-red-500 block font-mono">{errors.name}</span>}
+                      {errors.name && <span className="text-[10px] text-red-600 block font-mono">{errors.name}</span>}
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-[10px] uppercase font-bold tracking-wider text-neutral-500">Email Address</label>
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#6B6862]">Email Address</label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-black text-black dark:text-white transition-all"
-                        placeholder="name@domain.com"
+                        className="w-full bg-[#F2EFE9]/40 border border-[rgba(17,17,16,0.12)] rounded-xl px-4 py-2.5 text-xs text-[#111110] placeholder-[#6B6862]/60 focus:outline-none focus:border-[#111110] focus:bg-white transition-all"
+                        placeholder="e.g. name@organization.com"
                       />
-                      {errors.email && <span className="text-[9px] text-red-500 block font-mono">{errors.email}</span>}
+                      {errors.email && <span className="text-[10px] text-red-600 block font-mono">{errors.email}</span>}
                     </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold tracking-wider text-neutral-500">Subject</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#6B6862]">Subject</label>
                     <input
                       type="text"
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-black text-black dark:text-white transition-all"
-                      placeholder="Inquiry / Consultation"
+                      className="w-full bg-[#F2EFE9]/40 border border-[rgba(17,17,16,0.12)] rounded-xl px-4 py-2.5 text-xs text-[#111110] placeholder-[#6B6862]/60 focus:outline-none focus:border-[#111110] focus:bg-white transition-all"
+                      placeholder="e.g. Engineering Opportunity / Project Discussion"
                     />
-                    {errors.subject && <span className="text-[9px] text-red-500 block font-mono">{errors.subject}</span>}
+                    {errors.subject && <span className="text-[10px] text-red-600 block font-mono">{errors.subject}</span>}
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[10px] uppercase font-bold tracking-wider text-neutral-500">Message</label>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#6B6862]">Message</label>
                     <textarea
                       name="message"
                       rows={5}
                       value={formData.message}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-black text-black dark:text-white transition-all resize-none"
-                      placeholder="Type details (minimum 10 characters)..."
+                      className="w-full bg-[#F2EFE9]/40 border border-[rgba(17,17,16,0.12)] rounded-xl px-4 py-2.5 text-xs text-[#111110] placeholder-[#6B6862]/60 focus:outline-none focus:border-[#111110] focus:bg-white transition-all resize-none"
+                      placeholder="Share project details or inquiry..."
                     />
-                    {errors.message && <span className="text-[9px] text-red-500 block font-mono">{errors.message}</span>}
+                    {errors.message && <span className="text-[10px] text-red-600 block font-mono">{errors.message}</span>}
                   </div>
 
                   {status === 'error' && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-[9px] flex items-center gap-2">
+                    <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center gap-2">
                       <AlertCircle size={14} className="shrink-0" />
                       <span>{statusMessage}</span>
                     </div>
@@ -224,9 +241,10 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 bg-[#111110] hover:bg-[#F97316] text-[#F2EFE9] rounded-full font-semibold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow cursor-pointer"
                   >
-                    {status === 'loading' ? 'TRANSMITTING...' : 'TRANSMIT MESSAGE'}
+                    <Send size={13} />
+                    <span>{status === 'loading' ? 'Sending Message...' : 'Send Message'}</span>
                   </button>
                 </motion.form>
               )}

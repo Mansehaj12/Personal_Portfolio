@@ -6,14 +6,17 @@ PORTFOLIO CONTEXT & KNOWLEDGE BASE:
 - **Full Name**: Mansehaj Preet Singh
 - **Current Education**: Bachelor of Engineering (B.E.) in Computer Engineering (COE) at Thapar Institute of Engineering and Technology (TIET), Patiala, Punjab. Expected graduation: May 2027.
 - **Target Roles**: Open & actively seeking Quality Engineering, Software Engineering, or Data Science / Machine Learning Internships.
-- **Key Projects**:
+- **Key Projects & Commercial Deliveries**:
   1. **Capstone Project: Scenario-Based ODD Safety Framework for Autonomous Vehicles**: Perception-to-action safety pipeline for autonomous vehicles in Indian road environments (IDD-Lite). Integrates PyTorch SegNet semantic segmentation (AMP CUDA acceleration), YOLOv8 object detection, GPU weather perturbation simulations (fog/rain/contrast), and an interactive Leaflet.js dashboard evaluating real-time 18-feature Operational Design Domain (ODD) safety metrics and SAE Level 3 disengagement rules.
-  2. **CareerLens**: AI-powered job market intelligence & placement probability SaaS with interactive what-if simulation dials & PDF resume gap analyzers (Ridge Regression, Decision Trees).
-  3. **MediSmart**: AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.
-  4. **PowerMRO**: Industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).
-  5. **GameIQ**: ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on 90,000+ gamer dataset.
-  6. **Robust Weather & Environmental Dashboard**: Responsive asynchronous weather dashboard fetching environmental metrics via OpenWeather REST API with input-guard caching via localStorage.
-  7. **Real-Time Financial Converter Engine**: Web application utilizing ExchangeRate API to execute real-time currency conversions across 150+ international assets with 4-decimal precision.
+  2. **Divine Cafe (Commercial Client PWA)**: Installable Progressive Web App for Divine Cafe (Baradari Garden, Patiala) featuring 1-tap WhatsApp ordering (Dine-in vs Takeaway), a 52-dish pure vegetarian digital menu, past order 1-tap reordering, and offline service worker caching. Live: https://divinecafe-plum.vercel.app/
+  3. **The Home Delight Bakery (Commercial Client Platform)**: Festive hamper and confectionery digital catalogue for The Home Delight Bakery (Patiala) featuring dynamic budget tier filtering (₹200–₹1,800), packaging variant selection (500g vs 1kg), corporate bulk inquiry dispatch, and an automated scannable QR code generator for box packaging. Live: https://the-home-delight-bakery.vercel.app/
+  4. **FlawlessTips by MK (Luxury Nail Studio SaaS)**: Full-stack appointment booking and e-commerce web application for a luxury nail artistry studio. Built with Next.js 16, React 19, Prisma ORM, and Firebase Auth with staff/admin portals, press-on nail shop, and Recharts analytics.
+  5. **CareerLens**: AI-powered job market intelligence & placement probability SaaS with interactive what-if simulation dials & PDF resume gap analyzers (Ridge Regression, Decision Trees).
+  6. **MediSmart**: AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts, enabling users to swap brand-name drugs for generic equivalents and save up to 80%.
+  7. **PowerMRO**: Industrial simulation platform in Next.js & Recharts simulating live equipment telemetry data to calculate Remaining Useful Life (RUL).
+  8. **GameIQ**: ML player analytics dashboard built with Python/Flask predicting mobile user churn with 86.8% accuracy on 90,000+ gamer dataset.
+  9. **Robust Weather & Environmental Dashboard**: Responsive asynchronous weather dashboard fetching environmental metrics via OpenWeather REST API with input-guard caching via localStorage.
+  10. **Real-Time Financial Converter Engine**: Web application utilizing ExchangeRate API to execute real-time currency conversions across 150+ international assets with 4-decimal precision.
 - **Technical Skills**:
   - Languages: Python, JavaScript, C/C++, SQL, Java, R, C# (.NET)
   - Data Science & ML: Pandas, NumPy, Scikit-learn, PyTorch, XGBoost, Random Forest, Exploratory Data Analysis (EDA)

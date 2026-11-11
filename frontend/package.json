@@ -12,6 +12,7 @@
   "dependencies": {
     "canvas-confetti": "^1.9.3",
     "framer-motion": "^12.4.7",
+    "lenis": "^1.3.27",
     "lucide-react": "^0.475.0",
     "mansehaj-portfolio-root": "file:..",
     "react": "^19.2.6",

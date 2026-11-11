@@ -1,21 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Github, Sparkles, Cpu, Layers, Activity, CheckCircle2 } from 'lucide-react';
+import { X, Github, Sparkles, Cpu, Layers, Activity, CheckCircle2, ExternalLink, Briefcase } from 'lucide-react';
 
 export default function ProjectModal({ project, onClose }) {
+  const scrollContainerRef = useRef(null);
+
   useEffect(() => {
+    if (!project) return;
+
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+
+    // Freeze page scroll and pause Lenis smoothly
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    if (window.lenis) {
+      window.lenis.stop();
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow || 'unset';
+      if (window.lenis) {
+        window.lenis.start();
+      }
+    };
+  }, [project, onClose]);
 
   if (!project) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/60 backdrop-blur-md">
+      <div 
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
+        className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-neutral-900/60 backdrop-blur-xs font-sans"
+      >
         {/* Backdrop click to close */}
         <motion.div 
           initial={{ opacity: 0 }}
@@ -27,60 +49,76 @@ export default function ProjectModal({ project, onClose }) {
 
         {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          data-lenis-prevent="true"
+          initial={{ opacity: 0, scale: 0.96, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden z-10 my-auto"
+          exit={{ opacity: 0, scale: 0.96, y: 15 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="relative w-full max-w-3xl bg-[#FAF8F5] rounded-3xl border border-[rgba(17,17,16,0.15)] shadow-2xl overflow-hidden z-10 my-auto flex flex-col max-h-[90vh]"
         >
           {/* Header Bar */}
-          <div className="p-6 pb-4 border-b border-slate-100 dark:border-zinc-800 flex items-start justify-between gap-4">
-            <div className="space-y-1">
+          <div className="p-6 pb-4 border-b border-[rgba(17,17,16,0.1)] flex items-start justify-between gap-4 bg-white">
+            <div className="space-y-1.5 pr-2">
               <div className="flex items-center gap-2 flex-wrap">
                 {project.isCapstone && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">
-                    <Sparkles size={11} className="text-indigo-500 animate-pulse" /> Capstone Project
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20">
+                    <Sparkles size={11} className="text-[#F97316]" /> Capstone Project
                   </span>
                 )}
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">
+                {project.isClient && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
+                    <Briefcase size={11} className="text-emerald-700" /> Commercial Client Project
+                  </span>
+                )}
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#6B6862]">
                   {project.subtitle}
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-black dark:text-white leading-tight">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#111110] leading-tight">
                 {project.title}
               </h2>
             </div>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full text-neutral-400 hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors shrink-0"
-              aria-label="Close modal"
+              className="p-2 rounded-full bg-[#F2EFE9] text-[#111110] hover:bg-[#111110] hover:text-white transition-colors shrink-0 cursor-pointer"
+              aria-label="Close modal (Esc)"
+              title="Close (Esc)"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
-          {/* Modal Body */}
-          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto font-sans">
+          {/* Modal Body - Scrollable Container */}
+          <div 
+            ref={scrollContainerRef}
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+            className="p-6 space-y-6 overflow-y-auto flex-1 overscroll-contain"
+          >
             {/* Highlights / Metrics */}
-            <div className="p-3.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 flex items-center gap-3">
-              <Activity size={18} className="text-indigo-600 dark:text-indigo-400 shrink-0" />
-              <div>
-                <div className="text-[10px] uppercase font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                  Performance & Key Metrics
+            {project.metrics && (
+              <div className="p-4 rounded-xl bg-white border border-[rgba(17,17,16,0.1)] flex items-center gap-3 shadow-2xs">
+                <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 text-[#F97316] flex items-center justify-center shrink-0">
+                  <Activity size={18} />
                 </div>
-                <div className="text-xs font-semibold text-slate-800 dark:text-zinc-200">
-                  {project.metrics}
+                <div>
+                  <div className="text-[10px] uppercase font-mono font-bold text-[#6B6862] tracking-wider">
+                    Performance & Key Metrics
+                  </div>
+                  <div className="text-xs sm:text-sm font-bold text-[#111110] mt-0.5">
+                    {project.metrics}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Overview Description */}
             <div className="space-y-2">
-              <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-neutral-400 flex items-center gap-1.5">
-                <Layers size={14} className="text-indigo-500" /> Project Overview
+              <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-[#6B6862] flex items-center gap-1.5">
+                <Layers size={14} className="text-[#F97316]" /> Project Overview
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#4A4742] leading-relaxed">
                 {project.desc}
               </p>
             </div>
@@ -88,21 +126,21 @@ export default function ProjectModal({ project, onClose }) {
             {/* Architecture Pipeline Details */}
             {project.architecture && (
               <div className="space-y-3">
-                <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-neutral-400 flex items-center gap-1.5">
-                  <Cpu size={14} className="text-indigo-500" /> System Architecture & Execution Pipeline
+                <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-[#6B6862] flex items-center gap-1.5">
+                  <Cpu size={14} className="text-[#F97316]" /> System Architecture & Execution Pipeline
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {project.architecture.map((layer, lIdx) => (
                     <div 
                       key={lIdx}
-                      className="p-3 rounded-lg border border-slate-100 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-950/60 flex items-start gap-2.5"
+                      className="p-3.5 rounded-xl border border-[rgba(17,17,16,0.1)] bg-white flex items-start gap-3 shadow-2xs"
                     >
-                      <CheckCircle2 size={15} className="text-indigo-500 shrink-0 mt-0.5" />
+                      <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
                       <div>
-                        <span className="text-xs font-bold text-black dark:text-white block">
+                        <span className="text-xs font-bold text-[#111110] block">
                           {layer.name}
                         </span>
-                        <span className="text-[11px] text-neutral-500 dark:text-zinc-400 leading-relaxed block mt-0.5">
+                        <span className="text-xs text-[#6B6862] leading-relaxed block mt-1">
                           {layer.details}
                         </span>
                       </div>
@@ -114,14 +152,14 @@ export default function ProjectModal({ project, onClose }) {
 
             {/* Tech Stack */}
             <div className="space-y-2">
-              <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-neutral-400">
+              <h3 className="text-xs uppercase font-mono font-bold tracking-wider text-[#6B6862]">
                 Technologies & Frameworks
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {project.tech.map((t, tIdx) => (
                   <span 
                     key={tIdx} 
-                    className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 text-[10px] font-mono font-medium"
+                    className="px-2.5 py-1 rounded-md bg-white border border-[rgba(17,17,16,0.1)] text-[#111110] text-[11px] font-mono font-medium shadow-2xs"
                   >
                     {t}
                   </span>
@@ -131,19 +169,35 @@ export default function ProjectModal({ project, onClose }) {
           </div>
 
           {/* Modal Footer */}
-          <div className="p-4 px-6 bg-slate-50 dark:bg-zinc-950 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between gap-4">
-            <span className="text-[11px] text-neutral-400 font-mono">
+          <div className="p-4 px-6 bg-white border-t border-[rgba(17,17,16,0.1)] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <span className="text-[11px] text-[#6B6862] font-mono">
               Press ESC or click anywhere outside to close
             </span>
 
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-900 dark:bg-zinc-100 text-white dark:text-black text-xs font-mono font-bold tracking-wider uppercase hover:bg-indigo-600 dark:hover:bg-indigo-400 transition-colors shadow-sm"
-            >
-              <Github size={14} /> View Source Code
-            </a>
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
+              {project.liveLink && (
+                <a
+                  href={project.liveLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-mono font-semibold transition-colors shadow-2xs"
+                >
+                  <ExternalLink size={13} />
+                  <span>Live Demo</span>
+                </a>
+              )}
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-[#111110] hover:bg-neutral-800 text-[#F2EFE9] text-xs font-mono font-semibold transition-colors shadow-2xs"
+                >
+                  <Github size={13} />
+                  <span>View Source Code</span>
+                </a>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>

@@ -1,31 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, X, ChevronRight, BookOpen, Layers } from 'lucide-react';
+import { GraduationCap, X, ChevronRight, BookOpen, Layers, Cpu, Code2, Database, Layout, Terminal, Sparkles } from 'lucide-react';
 
 export default function Skills() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSem, setActiveSem] = useState('All');
 
+  // Prevent scroll hijacking and lock body when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      if (window.lenis) window.lenis.stop();
+    } else {
+      document.body.style.overflow = 'unset';
+      if (window.lenis) window.lenis.start();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const skillGroups = [
     {
+      id: 'languages',
+      num: '01',
       category: 'Languages',
-      items: ['Python', 'JavaScript', 'C/C++', 'SQL', 'R', 'Java', 'C# (.NET)']
+      items: ['Python', 'C / C++', 'JavaScript (ES6+)', 'SQL', 'TypeScript', 'R', 'HTML5', 'CSS3']
     },
     {
-      category: 'Data Science & Machine Learning',
-      items: ['Pandas & NumPy', 'Scikit-learn', 'Deep Learning (PyTorch)', 'Random Forest', 'XGBoost', 'Exploratory Data Analysis (EDA)']
+      id: 'frontend',
+      num: '02',
+      category: 'Frontend & UI',
+      items: ['React.js', 'Next.js 16', 'Tailwind CSS', 'Framer Motion', 'PWA & Service Workers', 'Leaflet.js', 'GeoJSON', 'Recharts']
     },
     {
-      category: 'Backend & APIs',
-      items: ['Flask', 'Node.js', 'Express', 'FastAPI', 'REST APIs Integration', 'OpenAI API']
+      id: 'backend_data',
+      num: '03',
+      category: 'Backend & Data',
+      items: ['Flask', 'Node.js', 'Express', 'FastAPI', 'PostgreSQL', 'MySQL', 'SQLite', 'Prisma ORM', 'Firebase Auth', 'REST APIs']
     },
     {
-      category: 'Frontend & Visualizations',
-      items: ['React.js', 'Next.js', 'Tailwind CSS', 'Recharts', 'Matplotlib & Seaborn', 'Power BI']
+      id: 'ai_ml',
+      num: '04',
+      category: 'AI & ML',
+      items: ['PyTorch', 'TensorFlow', 'scikit-learn', 'YOLOv8', 'SegNet', 'OpenCV', 'CARLA Simulator', 'Transfer Learning', 'Neural Networks', 'CUDA Acceleration', 'NLP']
     },
     {
-      category: 'Databases & Tools',
-      items: ['MySQL', 'PostgreSQL', 'MongoDB', 'Git & GitHub', 'CI/CD (GitHub Actions)', 'PyTest (Unit Testing)', 'Postman API Client']
+      id: 'analytics_tools',
+      num: '05',
+      category: 'Data & Analytics',
+      items: ['pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Git & GitHub', 'GitHub Actions', 'PyTest', 'Postman', 'Jupyter', 'Kaggle CLI']
     }
   ];
 
@@ -63,34 +92,27 @@ export default function Skills() {
         { code: 'UCS303', name: 'Operating System' },
         { code: 'UTA018', name: 'Object Oriented Programming' },
         { code: 'UCS301', name: 'Data Structures' },
-        { code: 'UCS405', name: 'Discrete Mathematical Structures' },
-        { code: 'UTA016', name: 'Engineering Design Project I' },
-        { code: 'UMA021', name: 'Numerical Linear Algebra' },
-        { code: 'UHU052', name: 'The Evolutionary Basis of Human Behaviour for Engineers' },
-        { code: 'UCS320', name: 'Introduction to Sustainable Green Computing' }
+        { code: 'UES012', name: 'Engineering Materials' },
+        { code: 'UMA034', name: 'Discrete Mathematical Structures' }
       ]
     },
     {
       id: 'Sem 4',
       title: 'Semester IV',
-      subtitle: 'Algorithms, DBMS & Computer Networks',
+      subtitle: 'Algorithms, Databases & Computer Networks',
       courses: [
         { code: 'UCS415', name: 'Design and Analysis of Algorithms' },
         { code: 'UCS310', name: 'Database Management Systems' },
         { code: 'UCS414', name: 'Computer Networks' },
-        { code: 'UCS321', name: 'AI for Engineers' },
-        { code: 'UMA401', name: 'Probability and Statistics' },
-        { code: 'UTA024', name: 'Engineering Design Project II' },
-        { code: 'UTD003', name: 'Aptitude Skills Building' }
+        { code: 'UTA002', name: 'Manufacturing Practices' },
+        { code: 'UMA011', name: 'Numerical Analysis' }
       ]
     },
     {
       id: 'Sem 5',
       title: 'Semester V',
-      subtitle: 'Machine Learning, Web & Architecture',
+      subtitle: 'Software Engineering, Architecture & Electives',
       courses: [
-        { code: 'UML501', name: 'Machine Learning' },
-        { code: 'UCS615', name: 'Image Processing' },
         { code: 'UCS503', name: 'Software Engineering' },
         { code: 'UCS510', name: 'Computer Architecture and Organization' },
         { code: 'PEC-I', name: 'Elective-I' }
@@ -131,188 +153,153 @@ export default function Skills() {
     ? semesterCoursework
     : semesterCoursework.filter(sem => sem.id === activeSem);
 
-  // Motion variants for staggered badge layout
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.04
-      }
-    }
-  };
-
-  const badgeVariants = {
-    hidden: { opacity: 0, y: 10, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 200, damping: 15 } }
-  };
-
   return (
-    <section id="skills" className="py-20 px-6 sm:px-12 bg-[#FAF7F0] dark:bg-zinc-900 font-sans border-b border-slate-100 dark:border-zinc-800">
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="max-w-7xl mx-auto space-y-12"
-      >
+    <section id="skills" className="py-24 px-6 sm:px-12 bg-transparent font-sans border-b border-[rgba(17,17,16,0.1)] relative">
+      <div className="max-w-6xl mx-auto space-y-12">
         
-        {/* Main Section Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Side: Header (Spans 4 columns) */}
-          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
-            <h2 className="text-3xl font-black uppercase tracking-tight text-black dark:text-white border-b-4 border-black dark:border-white pb-3 inline-block">
-              Skills
-            </h2>
-            <p className="text-xs text-neutral-500 max-w-xs leading-relaxed">
-              My technology toolset organized by categories, spanning machine learning, core languages, backend infrastructure, and testing platforms.
-            </p>
-          </div>
+        {/* Section Header */}
+        <div className="space-y-3 pb-6 border-b border-[rgba(17,17,16,0.1)]">
+          <span className="font-mono text-xs font-bold text-[#6B6862] tracking-wider uppercase">
+            [ 03 // TECHNICAL TOOLKIT ]
+          </span>
 
-          {/* Right Side: Skill Tags (Spans 8 columns) */}
-          <div className="lg:col-span-8 space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {skillGroups.map((group, idx) => (
-                <motion.div 
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1, duration: 0.6 }}
-                  key={idx} 
-                  className="p-5 border border-slate-200/60 dark:border-zinc-850 bg-white dark:bg-zinc-950 rounded-2xl space-y-3 shadow-sm"
-                >
-                  <h3 className="text-xs font-bold text-black dark:text-white uppercase tracking-wider border-b border-slate-100 dark:border-zinc-900 pb-2">
-                    {group.category}
-                  </h3>
-                  
-                  {/* Staggered badge rendering container */}
-                  <motion.div 
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    className="flex flex-wrap gap-1.5 pt-1"
-                  >
-                    {group.items.map((item, itemIdx) => (
-                      <motion.span 
-                        variants={badgeVariants}
-                        key={itemIdx} 
-                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200/30 dark:border-zinc-800 text-[#1A1A1A] dark:text-zinc-300 text-[10px] font-semibold leading-none cursor-default hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200"
-                      >
-                        {item}
-                      </motion.span>
-                    ))}
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#111110]">
+            What I work <span className="serif-i text-5xl sm:text-6xl lg:text-7xl font-normal text-[#111110]">with</span>
+          </h2>
+
+          <p className="text-xs sm:text-sm text-[#6B6862] leading-relaxed max-w-2xl">
+            Technologies, frameworks, and developer tools I reach for across machine learning, full-stack systems, and data pipelines.
+          </p>
         </div>
 
-        {/* Compact Launcher Box for Academic Coursework */}
-        <div className="pt-8 border-t border-slate-200/80 dark:border-zinc-800/80">
-          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-850 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-black dark:hover:border-zinc-700 transition-colors duration-300">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 text-black dark:text-white text-[11px] font-bold uppercase tracking-wider">
-                <GraduationCap className="w-3.5 h-3.5" />
-                <span>Thapar University Curriculum</span>
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-black dark:text-white">
-                Academic Coursework (Sem 1 – 7)
-              </h3>
-              <p className="text-xs text-neutral-500 leading-relaxed">
-                Explore the official 7-semester Computer Engineering curriculum scheme studied at Thapar Institute of Engineering & Technology (TIET), Patiala.
-              </p>
+        {/* Minimalist Horizontal Skill Matrix */}
+        <div className="divide-y divide-[rgba(17,17,16,0.1)] border-b border-[rgba(17,17,16,0.1)]">
+          {skillGroups.map((group) => (
+            <div 
+              key={group.id} 
+              className="py-6 sm:py-7 px-5 sm:px-8 -mx-5 sm:-mx-8 rounded-2xl grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center group transition-all duration-300 ease-out hover:bg-[#111110] hover:shadow-xl cursor-default"
+            >
+              {/* Left Column: Morphing Number to Orange Disc & Title */}
+              <div className="md:col-span-4 flex items-center gap-4">
+                <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0">
+                  <span className="font-mono text-xs sm:text-sm font-bold text-[#F97316] group-hover:opacity-0 transition-opacity duration-200">
+                    {group.num}
+                  </span>
+                  <span className="absolute inset-0 rounded-full bg-[#F97316] scale-0 group-hover:scale-100 transition-transform duration-300 ease-out shadow-xs" />
+                </div>
 
-              {/* Quick semester preview tags */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-2">
-                {semesterCoursework.map((sem) => (
-                  <button
-                    key={sem.id}
-                    onClick={() => openSemesterModal(sem.id)}
-                    className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200/40 dark:border-zinc-800 text-[10px] font-bold text-neutral-700 dark:text-zinc-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                <h3 className="text-xl sm:text-2xl font-bold text-[#111110] group-hover:text-white tracking-tight transition-colors duration-300">
+                  {group.category}
+                </h3>
+              </div>
+
+              {/* Right Column: Dynamic Pill Badges */}
+              <div className="md:col-span-8 flex flex-wrap items-center gap-2">
+                {group.items.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3.5 py-1.5 rounded-full bg-white group-hover:bg-[#1C1C1A] border border-[rgba(17,17,16,0.12)] group-hover:border-white/20 text-[#111110] group-hover:text-white font-mono text-xs tracking-tight shadow-2xs hover:!bg-[#F97316] hover:!border-[#F97316] hover:!text-white transition-all duration-300 cursor-default"
                   >
-                    {sem.id}
-                  </button>
+                    {item}
+                  </span>
                 ))}
               </div>
             </div>
-
-            {/* Launch Modal Button */}
-            <button
-              onClick={() => openSemesterModal('All')}
-              className="px-6 py-3.5 rounded-full bg-black dark:bg-white text-white dark:text-black text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-all shrink-0 shadow-md group"
-            >
-              <span>View Coursework Box</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </div>
+          ))}
         </div>
 
-      </motion.div>
+        {/* Academic Coursework Banner */}
+        <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-white border border-[rgba(17,17,16,0.12)] shadow-2xs">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <GraduationCap size={16} className="text-[#F97316]" />
+              <span className="text-xs font-bold text-[#111110] uppercase tracking-wider font-mono">
+                Thapar University Academic Curriculum
+              </span>
+            </div>
+            <p className="text-xs text-[#6B6862]">
+              Official 7-semester Computer Engineering coursework (Operating Systems, Algorithms, Computer Vision & Capstone).
+            </p>
+          </div>
 
-      {/* Interactive Modal Box */}
+          <button
+            onClick={() => openSemesterModal('All')}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111110] hover:bg-neutral-800 text-[#F2EFE9] text-xs font-mono font-semibold transition-all cursor-pointer self-start sm:self-auto shrink-0 shadow-2xs"
+          >
+            <span>Explore Coursework (Sem 1–7)</span>
+            <ChevronRight size={14} className="text-[#F97316]" />
+          </button>
+        </div>
+
+      </div>
+
+      {/* Coursework Modal */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
+          <div 
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 bg-neutral-900/60 backdrop-blur-xs font-sans"
+          >
             {/* Backdrop Blur */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md"
+              className="fixed inset-0"
             />
 
             {/* Modal Dialog Content */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              data-lenis-prevent="true"
+              initial={{ opacity: 0, scale: 0.96, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl max-h-[85vh] bg-[#FAF7F0] dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col z-10"
+              exit={{ opacity: 0, scale: 0.96, y: 15 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="relative w-full max-w-4xl max-h-[85vh] bg-[#FAF8F5] border border-[rgba(17,17,16,0.15)] rounded-3xl shadow-2xl overflow-hidden flex flex-col z-10"
             >
               {/* Modal Header */}
-              <div className="p-6 border-b border-slate-200/80 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm flex items-center justify-between gap-4">
+              <div className="p-6 border-b border-[rgba(17,17,16,0.1)] bg-white flex items-center justify-between gap-4">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-400">
-                    <GraduationCap className="w-4 h-4 text-black dark:text-white" />
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#6B6862]">
+                    <GraduationCap className="w-4 h-4 text-[#F97316]" />
                     <span>Thapar Institute of Engineering & Technology</span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-black uppercase text-black dark:text-white tracking-tight">
-                    Academic Curriculum (Sem 1 – 7)
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#111110] tracking-tight">
+                    Academic Curriculum Scheme (Sem 1 – 7)
                   </h3>
                 </div>
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-9 h-9 rounded-full bg-slate-100 dark:bg-zinc-800 text-black dark:text-white flex items-center justify-center hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors shrink-0"
+                  className="p-2 rounded-full bg-[#F2EFE9] text-[#111110] hover:bg-[#111110] hover:text-white transition-colors shrink-0 cursor-pointer"
+                  title="Close (Esc)"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Semester Filter Tabs */}
-              <div className="px-6 py-3 border-b border-slate-200/60 dark:border-zinc-900 bg-slate-50/50 dark:bg-zinc-950 flex flex-wrap items-center gap-2 overflow-x-auto">
+              <div className="px-6 py-3 border-b border-[rgba(17,17,16,0.08)] bg-white flex flex-wrap items-center gap-1.5 overflow-x-auto">
                 <button
                   onClick={() => setActiveSem('All')}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                     activeSem === 'All'
-                      ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
-                      : 'bg-white dark:bg-zinc-900 text-neutral-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-800 hover:border-black dark:hover:border-white'
+                      ? 'bg-[#111110] text-[#F2EFE9]'
+                      : 'bg-[#F2EFE9] text-[#6B6862] hover:text-[#111110]'
                   }`}
                 >
                   All Semesters
                 </button>
-
                 {semesterCoursework.map((sem) => (
                   <button
                     key={sem.id}
                     onClick={() => setActiveSem(sem.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                       activeSem === sem.id
-                        ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
-                        : 'bg-white dark:bg-zinc-900 text-neutral-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-800 hover:border-black dark:hover:border-white'
+                        ? 'bg-[#111110] text-[#F2EFE9]'
+                        : 'bg-[#F2EFE9] text-[#6B6862] hover:text-[#111110]'
                     }`}
                   >
                     {sem.id}
@@ -320,58 +307,41 @@ export default function Skills() {
                 ))}
               </div>
 
-              {/* Modal Body - Scrollable Grid */}
-              <div className="p-6 overflow-y-auto space-y-6 max-h-[60vh]">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredSemesters.map((sem) => (
-                    <div
-                      key={sem.id}
-                      className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-sm space-y-3"
-                    >
-                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-2.5">
-                        <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-neutral-100 dark:bg-zinc-800 text-neutral-800 dark:text-zinc-200">
-                          {sem.title}
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-neutral-400 dark:text-zinc-500">
-                          {sem.courses.length} Courses
-                        </span>
-                      </div>
-
-                      <p className="text-[11px] font-medium text-neutral-500 dark:text-zinc-400 italic">
-                        {sem.subtitle}
-                      </p>
-
-                      <div className="pt-1 space-y-2">
-                        {sem.courses.map((course, cIdx) => (
-                          <div
-                            key={cIdx}
-                            className="flex items-center justify-between text-xs py-1 border-b border-slate-50 dark:border-zinc-850 last:border-0"
-                          >
-                            <span className="font-semibold text-black dark:text-white pr-2">
-                              {course.name}
-                            </span>
-                            <span className="font-mono text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded shrink-0">
-                              {course.code}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+              {/* Modal Body: Course Grid */}
+              <div 
+                data-lenis-prevent="true"
+                onWheel={(e) => e.stopPropagation()}
+                className="p-6 overflow-y-auto space-y-6 flex-1 overscroll-contain"
+              >
+                {filteredSemesters.map((sem) => (
+                  <div key={sem.id} className="space-y-3">
+                    <div className="flex items-baseline justify-between border-b border-[rgba(17,17,16,0.08)] pb-2">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#111110] font-mono">
+                        {sem.title} &mdash; <span className="text-[#6B6862] font-sans font-medium">{sem.subtitle}</span>
+                      </h4>
+                      <span className="text-[10px] font-mono text-[#6B6862]">
+                        {sem.courses.length} Courses
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Modal Footer */}
-              <div className="p-4 border-t border-slate-200/80 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm flex items-center justify-between text-xs text-neutral-500 dark:text-zinc-400 px-6">
-                <span>TIET Patiala — Computer Engineering Scheme</span>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-1.5 rounded-full bg-slate-200 dark:bg-zinc-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-                >
-                  Close
-                </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                      {sem.courses.map((course, cIdx) => (
+                        <div
+                          key={cIdx}
+                          className="p-3 rounded-xl bg-white border border-[rgba(17,17,16,0.1)] shadow-2xs flex items-start gap-2.5"
+                        >
+                          <span className="px-2 py-0.5 rounded bg-[#F2EFE9] border border-[rgba(17,17,16,0.08)] text-[10px] font-mono font-bold text-[#111110] shrink-0">
+                            {course.code}
+                          </span>
+                          <span className="text-xs font-semibold text-[#111110] leading-snug">
+                            {course.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-
             </motion.div>
           </div>
         )}
@@ -379,5 +349,3 @@ export default function Skills() {
     </section>
   );
 }
-
-

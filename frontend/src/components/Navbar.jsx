@@ -1,68 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const scrollToSection = (id) => {
+    setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { offset: -70, duration: 1.2 });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
       window.history.pushState(null, null, `#${id}`);
     }
   };
 
+  const navLinks = [
+    { num: '01', label: 'Projects', id: 'projects' },
+    { num: '02', label: 'About', id: 'about' },
+    { num: '03', label: 'Skills', id: 'skills' },
+    { num: '04', label: 'Credentials', id: 'achievements' },
+    { num: '05', label: 'Contact', id: 'contact' },
+  ];
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-40 bg-white/95 dark:bg-black/95 border-b border-slate-100 dark:border-zinc-900 py-4 px-6 sm:px-12 backdrop-blur-sm select-none">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#F2EFE9]/90 backdrop-blur-md border-b border-[rgba(17,17,16,0.08)] py-4 px-6 sm:px-12 select-none transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Monogram Brand */}
         <button
           onClick={() => scrollToSection('hero')}
-          className="flex items-center gap-2 group font-sans text-sm font-extrabold tracking-tighter text-black dark:text-white"
+          className="font-bold text-xl sm:text-2xl tracking-tighter text-[#111110] flex items-baseline gap-0.5 cursor-pointer group"
         >
-          {/* Typographic clean Logo */}
-          <div className="w-8 h-8 rounded-lg bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-xs select-none">
-            MP
-          </div>
-          <span>Mansehaj Preet Singh</span>
+          <span>MP</span>
+          <em className="serif-i text-xs font-normal text-[#F97316] select-none group-hover:rotate-12 transition-transform">&reg;</em>
         </button>
 
-        {/* Links */}
-        <div className="flex items-center gap-6 sm:gap-8 font-sans">
-          <button 
-            onClick={() => scrollToSection('about')} 
-            className="text-[11px] sm:text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+        {/* Desktop Nav Links */}
+        <nav className="hidden md:flex items-center gap-7 text-[#111110]">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className="text-xs font-semibold tracking-wide hover:text-[#F97316] transition-colors relative py-1 group cursor-pointer"
+            >
+              <span className="font-mono text-[10px] text-[#6B6862] mr-1.5 opacity-60">
+                {link.num}
+              </span>
+              <span>{link.label}</span>
+              <span className="absolute left-0 bottom-0 w-0 h-[1.5px] bg-[#111110] group-hover:w-full transition-all duration-300" />
+            </button>
+          ))}
+        </nav>
+
+        {/* Contact Quick Button */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => scrollToSection('contact')}
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#111110] text-[#111110] hover:bg-[#111110] hover:text-[#F2EFE9] text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer"
           >
-            About me
-          </button>
-          
-          <button 
-            onClick={() => scrollToSection('skills')} 
-            className="text-[11px] sm:text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-          >
-            Skills
-          </button>
-          
-          <button 
-            onClick={() => scrollToSection('projects')} 
-            className="text-[11px] sm:text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-          >
-            Portfolio
+            <span>Let's talk</span>
+            <span className="text-[#F97316] font-bold">&rarr;</span>
           </button>
 
-          <button 
-            onClick={() => scrollToSection('achievements')} 
-            className="text-[11px] sm:text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-1.5 text-[#111110]"
+            aria-label="Toggle Menu"
           >
-            Certifications
-          </button>
-
-          <button 
-            onClick={() => scrollToSection('contact')} 
-            className="hidden sm:inline-block px-5 py-2 text-[10px] font-bold uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white rounded-full hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
-          >
-            CONTACT ME
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
+
       </div>
-    </nav>
+
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden pt-4 pb-2 border-t border-[rgba(17,17,16,0.1)] mt-3 flex flex-col gap-2 bg-[#F2EFE9]">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className="w-full text-left px-2 py-2 text-sm font-bold text-[#111110] hover:text-[#F97316] flex items-center justify-between"
+            >
+              <span>{link.label}</span>
+              <span className="font-mono text-xs text-[#6B6862]">{link.num}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </header>
   );
 }

@@ -1,263 +1,217 @@
-import React, { useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Github, Linkedin, ArrowDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowDown } from 'lucide-react';
 
 export default function Hero() {
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [timeStr, setTimeStr] = useState('');
+  const [activePhoto, setActivePhoto] = useState(0);
+
+  const photos = [
+    { src: '/showcase-1.png', label: 'Showcase // 01' },
+    { src: '/showcase-2.png', label: 'Showcase // 02' },
+    { src: '/pprofile.JPG', label: 'Casual // Campus' },
+    { src: '/IMG_1385.JPG', label: 'Formal // Defense' },
+    { src: '/IMG_5355.JPG', label: 'Field // Outdoor' },
+  ];
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTimeStr(
+        now.toLocaleTimeString('en-US', {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { offset: -70, duration: 1.2 });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
       window.history.pushState(null, null, `#${id}`);
     }
   };
 
-  // Mouse tilt tracking variables
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Dampened smooth springs for 3D card deck rotation
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), { stiffness: 90, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), { stiffness: 90, damping: 20 });
-
-  const springConfig = { stiffness: 120, damping: 22 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
-
-  // Parallax displacement coordinates for each card layer (back to front)
-  const card0_X = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
-  const card0_Y = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
-
-  const card1_X = useTransform(smoothX, [-0.5, 0.5], [-15, 15]);
-  const card1_Y = useTransform(smoothY, [-0.5, 0.5], [-15, 15]);
-
-  const card2_X = useTransform(smoothX, [-0.5, 0.5], [20, -20]);
-  const card2_Y = useTransform(smoothY, [-0.5, 0.5], [20, -20]);
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
+  const tickerItems = [
+    'PyTorch',
+    'YOLOv8',
+    'SegNet',
+    'React.js',
+    'Flask',
+    'Autonomous Driving',
+    'PostgreSQL',
+    'Scikit-Learn',
+    'Next.js',
+    'Kaggle Expert',
+    'Computer Vision',
+    'Node.js',
+    'FastAPI',
+    'Leaflet.js',
+  ];
 
   return (
-    <section 
-      id="hero" 
-      className="min-h-screen relative flex items-stretch overflow-hidden select-none font-sans pt-[68px] bg-[#FAF7F0] dark:bg-zinc-950 transition-colors duration-500"
-    >
-      {/* Background Layer: Split screen */}
-      <div className="absolute inset-0 w-full h-full flex flex-col md:flex-row -z-10">
-        {/* Left Side: Light Gray with diagonal clip-path */}
-        <div className="w-full md:w-[60%] bg-[#E5E5E5] dark:bg-zinc-900/40 clip-diagonal h-full absolute inset-y-0 left-0 transition-colors" />
+    <section id="hero" className="relative pt-24 select-none font-sans overflow-hidden">
+      
+      {/* Container for Top Elements */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 space-y-12">
         
-        {/* Right Side: Black background */}
-        <div className="w-full bg-[#000000] dark:bg-zinc-950 h-full absolute inset-y-0 right-0 -z-20 transition-colors" />
-      </div>
+        {/* Sub-bar: Status and Location Time */}
+        <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] sm:text-xs text-[#6B6862] tracking-wider pt-4 border-b border-[rgba(17,17,16,0.08)] pb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_0_0_rgba(16,185,129,0.7)] animate-pulse" />
+            <span>Available for opportunities</span>
+          </div>
+          <div>
+            <span>Patiala, India &mdash; {timeStr || '14:52'} IST</span>
+          </div>
+        </div>
 
-      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 items-stretch relative z-10 px-6 sm:px-12">
-        
-        {/* Left Columns: Text Content (spans 7 columns on desktop) */}
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="md:col-span-7 flex flex-col justify-center py-16 pr-0 md:pr-12 text-[#1A1A1A] dark:text-white"
-        >
-          <div className="space-y-6 max-w-lg">
-            
-            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-300">
-              Hi, I am
-            </h3>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-none text-black dark:text-white">
-              Mansehaj Preet Singh
-            </h1>
-            
-            <p className="text-sm sm:text-base font-semibold text-neutral-550 dark:text-neutral-400 tracking-wide">
-              Data Scientist / Machine Learning Engineer / Developer
+        {/* Stats Row with Orange Accents */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-2">
+          <div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+              5<span className="text-[#F97316] font-normal">+</span>
+            </div>
+            <div className="font-mono text-[10px] text-[#6B6862] tracking-widest uppercase mt-1">
+              Projects Shipped
+            </div>
+          </div>
+
+          <div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+              18
+            </div>
+            <div className="font-mono text-[10px] text-[#6B6862] tracking-widest uppercase mt-1">
+              Certificates Verified
+            </div>
+          </div>
+
+          <div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+              Expert<span className="text-[#F97316] text-2xl font-normal">&bull;</span>
+            </div>
+            <div className="font-mono text-[10px] text-[#6B6862] tracking-widest uppercase mt-1">
+              Kaggle Global Rank
+            </div>
+          </div>
+
+          <div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+              15<span className="text-[#F97316] font-normal">+</span>
+            </div>
+            <div className="font-mono text-[10px] text-[#6B6862] tracking-widest uppercase mt-1">
+              Technologies
+            </div>
+          </div>
+        </div>
+
+        {/* Giant Typographic Headline */}
+        <div className="pt-2 pb-6">
+          <h1 className="text-[clamp(56px,13vw,170px)] font-bold text-[#111110] leading-[0.88] tracking-[-0.045em] uppercase select-none">
+            <span className="block">MANSEHAJ</span>
+            <span className="block mt-1">
+              PREET <span className="serif-i lowercase text-[clamp(64px,14.5vw,195px)] font-normal text-[#111110] tracking-normal inline-block hover:text-[#F97316] transition-colors">singh</span>
+            </span>
+          </h1>
+        </div>
+
+        {/* Tagline Strip with Orange Sparkles */}
+        <div className="font-mono text-xs sm:text-sm text-[#111110] font-semibold tracking-widest uppercase flex flex-wrap items-center gap-2.5 py-4 border-t border-b border-[rgba(17,17,16,0.12)]">
+          <span>Software Engineer</span>
+          <span className="text-[#F97316] text-sm">&diams;</span>
+          <span>Machine Learning Systems</span>
+          <span className="text-[#F97316] text-sm">&diams;</span>
+          <span>Computer Engineering '27</span>
+        </div>
+
+        {/* 2-Column Bio & Photo Presentation */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-2 pb-16 relative">
+          
+          {/* Left Column: Photo Card with Tab Switcher */}
+          <div className="md:col-span-4 flex flex-col items-start gap-3">
+            <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-[#E8E3D9] border border-[rgba(17,17,16,0.15)] shadow-xs group">
+              <img 
+                src={photos[activePhoto].src} 
+                alt="Mansehaj Preet Singh" 
+                className="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-103"
+              />
+              <div className="absolute bottom-3 left-3 bg-[#F2EFE9]/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-[10px] font-mono text-[#111110] font-semibold border border-[rgba(17,17,16,0.12)]">
+                {photos[activePhoto].label}
+              </div>
+            </div>
+
+            {/* Quick Photo Switcher Dots */}
+            <div className="flex items-center gap-2 pt-1">
+              {photos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActivePhoto(i)}
+                  className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                    activePhoto === i ? 'w-6 bg-[#111110]' : 'bg-[#6B6862]/40 hover:bg-[#111110]'
+                  }`}
+                  aria-label={`Show photo ${i + 1}`}
+                />
+              ))}
+              <span className="text-[10px] font-mono text-[#6B6862] ml-2">Click to switch frame</span>
+            </div>
+          </div>
+
+          {/* Right Column: Simple & Authentic Introduction */}
+          <div className="md:col-span-7 md:col-start-6 space-y-6">
+            <p className="text-xl sm:text-2xl font-normal text-[#111110] leading-snug">
+              I am a Computer Engineering student at <span className="serif-i text-2xl sm:text-3xl text-[#111110]">Thapar Institute</span> working on machine learning, autonomous systems, and full-stack applications.
             </p>
 
-            {/* Social Buttons */}
-            <div className="flex items-center gap-4 pt-6">
-              <a
-                href="mailto:sehajpreetsingh480@gmail.com"
-                className="w-12 h-12 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
-                title="Send Email"
-              >
-                <span className="font-sans font-bold text-lg">@</span>
-              </a>
-              <a
-                href="https://github.com/Mansehaj12"
-                target="_blank"
-                rel="noreferrer"
-                className="w-12 h-12 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
-                title="GitHub Profile"
-              >
-                <Github size={20} />
-              </a>
-              <a
-                href="https://linkedin.com/in/mansehajpreet"
-                target="_blank"
-                rel="noreferrer"
-                className="w-12 h-12 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
-                title="LinkedIn Profile"
-              >
-                <Linkedin size={20} />
-              </a>
-              <a
-                href="https://www.kaggle.com/sehaj1104"
-                target="_blank"
-                rel="noreferrer"
-                className="w-12 h-12 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
-                title="Kaggle Profile"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path d="M18.825 21.85h-4.887l-6.177-8.919v8.92H4.15V2.15h3.611v8.718l5.89-8.718h4.887l-7.222 9.805 7.509 9.895z" />
-                </svg>
-              </a>
-            </div>
+            <p className="text-sm sm:text-base text-[#6B6862] leading-relaxed">
+              I enjoy turning complex data and algorithmic models into clean, usable software. Always curious, constantly building, and focused on writing code that solves real problems.
+            </p>
 
-            {/* Hint scroll button */}
-            <div className="pt-8">
-              <button 
-                onClick={() => scrollToSection('about')}
-                className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-neutral-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors group"
+            {/* Direct Action Button */}
+            <div className="pt-2">
+              <button
+                onClick={() => scrollToSection('projects')}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#111110] bg-transparent text-[#111110] hover:bg-[#111110] hover:text-[#F2EFE9] text-xs font-semibold tracking-wide transition-all duration-300 shadow-2xs hover:shadow cursor-pointer group"
               >
-                SCROLL DOWN <ArrowDown size={14} className="group-hover:translate-y-1 transition-transform animate-bounce" />
+                <span>Explore projects</span>
+                <ArrowDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
               </button>
             </div>
-
           </div>
-        </motion.div>
 
-        {/* Right Columns: Interactive 3D Parallax & Depth-Focus Collage */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="md:col-span-5 flex flex-col justify-center items-center py-12 md:py-0 select-none"
-          style={{ perspective: 1200 }}
-        >
-          {/* Main 3D Card Stack Canvas */}
-          <motion.div
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className="relative w-full max-w-[460px] h-[520px] flex items-center justify-center cursor-crosshair"
-          >
-            
-            {/* Card 0: Casual Mode (pprofile.JPG) - Floating Back-Left */}
-            <motion.div
-              style={{ 
-                x: card0_X, 
-                y: card0_Y, 
-                z: hoveredCard === 0 ? 80 : 10,
-                transformStyle: "preserve-3d"
-              }}
-              onMouseEnter={() => setHoveredCard(0)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={`absolute top-[4%] left-[2%] w-[48%] aspect-[3/4.2] p-3 pb-8 rounded-xl bg-white dark:bg-zinc-900 border shadow-xl flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out ${
-                hoveredCard === 0 
-                  ? "scale-108 z-30 shadow-[0_20px_40px_rgba(245,158,11,0.3)] border-amber-500/50 dark:border-amber-400/50" 
-                  : hoveredCard !== null 
-                    ? "opacity-35 blur-[1.5px] grayscale-[20%] scale-95 z-0 border-slate-200/50 dark:border-zinc-800/50"
-                    : "z-10 opacity-100 scale-100 border-slate-200/80 dark:border-zinc-800/80"
-              }`}
-            >
-              <div className="w-full h-[85%] rounded-lg overflow-hidden bg-zinc-950">
-                <img 
-                  src="/pprofile.JPG" 
-                  alt="Mansehaj Casual Look" 
-                  className={`w-full h-full object-cover object-[center_12%] transition-transform duration-500 ${
-                    hoveredCard === 0 ? 'scale-105' : 'scale-100'
-                  }`}
-                />
-              </div>
-              <div className="text-center font-mono text-[7px] text-zinc-500 dark:text-zinc-400 font-extrabold tracking-widest pt-2.5">
-                [ MODE: CASUAL // SYS_L01 ]
-              </div>
-            </motion.div>
+          {/* Vertical Scroll Indicator on Right edge */}
+          <div className="hidden lg:flex flex-col items-center gap-2 absolute right-0 bottom-4 font-mono text-[10px] text-[#6B6862] tracking-widest uppercase">
+            <span>SCROLL</span>
+            <div className="w-px h-8 bg-[#111110]/40 animate-pulse" />
+          </div>
 
-            {/* Card 1: Nature Mode (IMG_5355.JPG) - Floating Bottom-Left */}
-            <motion.div
-              style={{ 
-                x: card1_X, 
-                y: card1_Y, 
-                z: hoveredCard === 1 ? 80 : 20,
-                transformStyle: "preserve-3d"
-              }}
-              onMouseEnter={() => setHoveredCard(1)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={`absolute bottom-[6%] left-[4%] w-[47%] aspect-[3/4.2] p-3 pb-8 rounded-xl bg-white dark:bg-zinc-900 border shadow-xl flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out ${
-                hoveredCard === 1 
-                  ? "scale-108 z-30 shadow-[0_20px_40px_rgba(16,185,129,0.3)] border-emerald-500/50 dark:border-emerald-400/50" 
-                  : hoveredCard !== null 
-                    ? "opacity-35 blur-[1.5px] grayscale-[20%] scale-95 z-0 border-slate-200/50 dark:border-zinc-800/50"
-                    : "z-20 opacity-100 scale-100 border-slate-200/80 dark:border-zinc-800/80"
-              }`}
-            >
-              <div className="w-full h-[85%] rounded-lg overflow-hidden bg-zinc-950">
-                <img 
-                  src="/IMG_5355.JPG" 
-                  alt="Mansehaj Outdoors Look" 
-                  className="w-full h-full object-cover transition-transform duration-500"
-                  style={{
-                    transform: hoveredCard === 1 ? 'scale(1.58)' : 'scale(1.5)',
-                    transformOrigin: '72% 62%'
-                  }}
-                />
-              </div>
-              <div className="text-center font-mono text-[7px] text-zinc-500 dark:text-zinc-400 font-extrabold tracking-widest pt-2.5">
-                [ ENV: OUTDOOR // RUN_L02 ]
-              </div>
-            </motion.div>
-
-            {/* Card 2: Formal Mode (IMG_1385.JPG) - Floating Center-Front */}
-            <motion.div
-              style={{ 
-                x: card2_X, 
-                y: card2_Y, 
-                z: hoveredCard === 2 ? 90 : 30,
-                transformStyle: "preserve-3d"
-              }}
-              onMouseEnter={() => setHoveredCard(2)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={`absolute bottom-[16%] right-[6%] w-[52%] aspect-[3/4.2] p-3.5 pb-9 rounded-2xl bg-white dark:bg-zinc-900 border shadow-2xl flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out ${
-                hoveredCard === 2 
-                  ? "scale-108 z-40 shadow-[0_25px_45px_rgba(99,102,241,0.4)] border-indigo-500/50 dark:border-indigo-400/50" 
-                  : hoveredCard !== null 
-                    ? "opacity-35 blur-[1.5px] grayscale-[20%] scale-95 z-0 border-slate-200/50 dark:border-zinc-800/50"
-                    : "z-30 opacity-100 scale-100 border-slate-200/80 dark:border-zinc-800/80"
-              }`}
-            >
-              <div className="w-full h-[85%] rounded-xl overflow-hidden bg-zinc-950">
-                <img 
-                  src="/IMG_1385.JPG" 
-                  alt="Mansehaj Professional Suit" 
-                  className={`w-full h-full object-cover object-[center_12%] transition-transform duration-500 ${
-                    hoveredCard === 2 ? 'scale-105' : 'scale-100'
-                  }`}
-                />
-              </div>
-              <div className="flex items-center justify-center gap-1.5 font-mono text-[7px] text-zinc-500 dark:text-zinc-400 font-extrabold tracking-widest pt-2.5">
-                <span>[ AUTH: SYSTEM // SEC ]</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              </div>
-            </motion.div>
-
-          </motion.div>
-        </motion.div>
+        </div>
 
       </div>
+
+      {/* Infinite Black Marquee Ticker Strip */}
+      <div className="w-full bg-[#111110] text-[#F2EFE9] py-3.5 overflow-hidden border-t border-b border-[#111110] select-none">
+        <div className="animate-marquee whitespace-nowrap flex items-center gap-8 font-sans font-medium text-sm tracking-wide">
+          {/* Render twice for infinite loop */}
+          {[...tickerItems, ...tickerItems].map((item, idx) => (
+            <span key={idx} className="flex items-center gap-8">
+              <span>{item}</span>
+              <span className="text-[#F97316] text-base leading-none">&diams;</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
     </section>
   );
 }
-

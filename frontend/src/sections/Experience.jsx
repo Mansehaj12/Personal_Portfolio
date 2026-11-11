@@ -6,6 +6,19 @@ import GlassCard from '../components/GlassCard';
 export default function Experience() {
   const experiences = [
     {
+      role: 'Freelance Web Developer & Client Solutions',
+      company: 'Commercial Client Deployments',
+      duration: 'Jul 2024 – Present',
+      icon: Briefcase,
+      color: 'emerald',
+      bullets: [
+        'Architected and delivered production web applications for commercial clients including Divine Cafe (Baradari Garden), The Home Delight Bakery, and FlawlessTips Luxury Nail Studio.',
+        'Engineered 1-tap WhatsApp ordering workflows, past order memory (localStorage), dynamic product catalogues, and responsive mobile-first PWA architectures.',
+        'Built full-stack booking and e-commerce SaaS platforms utilizing Next.js, Prisma ORM, Firebase Auth, and Recharts performance dashboards.',
+        'Optimized Core Web Vitals across mobile devices, achieving sub-1.5s load times, offline service worker caching, and 95+ Google Lighthouse scores.'
+      ]
+    },
+    {
       role: 'Project Developer & ML Pipeline Lead',
       company: 'Academic & Open Source Initiatives',
       duration: 'Aug 2023 – Present',
@@ -49,29 +62,33 @@ export default function Experience() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
+      transition: { staggerChildren: 0.15 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 20 } }
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', damping: 20 } }
   };
 
   return (
-    <section id="experience" className="py-20 px-6 relative overflow-hidden font-sans">
-      <div className="absolute top-1/4 left-10 w-[200px] h-[200px] bg-purple-600/5 rounded-full blur-[80px] pointer-events-none" />
-
+    <section id="experience" className="py-24 px-6 sm:px-12 bg-transparent font-sans border-b border-[rgba(17,17,16,0.1)] relative">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Title */}
         <div className="text-center space-y-3">
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-glow-indigo">
-            Experience Timeline
+          <span className="font-mono text-xs font-bold text-[#6B6862] tracking-wider uppercase">
+            [ 03 // WORK TIMELINE & LEADERSHIP ]
+          </span>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#111110]">
+            Experience & <br />
+            <span className="serif-i text-4xl sm:text-5xl lg:text-6xl text-[#111110]">
+              Engagements
+            </span>
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-            A vertical timeline tracing my technical project leads, grassroots strategy research, and algorithm optimizations.
+          <p className="text-xs sm:text-sm text-[#6B6862] max-w-xl mx-auto">
+            A vertical timeline tracing commercial client deployments, open-source ML pipeline leads, grassroots strategy research, and algorithm optimizations.
           </p>
-          <div className="w-16 h-1 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto rounded-full" />
         </div>
 
         {/* Timeline List */}
@@ -80,10 +97,9 @@ export default function Experience() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="relative max-w-3xl mx-auto border-l border-slate-200 dark:border-white/10 pl-6 sm:pl-10 space-y-10"
+          className="relative max-w-3xl mx-auto border-l border-[rgba(17,17,16,0.18)] pl-6 sm:pl-10 space-y-8"
         >
           {experiences.map((exp, idx) => {
-            const Icon = exp.icon;
             return (
               <motion.div 
                 key={idx} 
@@ -91,36 +107,28 @@ export default function Experience() {
                 className="relative group"
               >
                 {/* Timeline node */}
-                <span className={`absolute -left-[39px] sm:-left-[53px] top-1.5 w-6 h-6 rounded-full border-4 border-slate-100 dark:border-darkBg flex items-center justify-center transition-all group-hover:scale-115 ${
-                  exp.color === 'indigo'
-                    ? 'bg-indigo-600 border-indigo-600/30 shadow-neon-indigo'
-                    : exp.color === 'purple'
-                    ? 'bg-purple-600 border-purple-600/30 shadow-neon-purple'
-                    : 'bg-cyan-500 border-cyan-500/30 shadow-neon-blue'
-                }`}>
-                  <Icon size={10} className="text-white" />
-                </span>
+                <span className="absolute -left-[33px] sm:-left-[49px] top-1.5 w-4 h-4 rounded-full bg-[#111110] border-2 border-[#F2EFE9] shadow-2xs" />
 
                 {/* Card details */}
-                <GlassCard glowColor={exp.color} className="p-5 sm:p-6 space-y-3">
+                <GlassCard className="p-5 sm:p-6 space-y-3 bg-white">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-800 dark:text-white leading-tight">
+                      <h3 className="text-sm sm:text-base font-bold text-[#111110] leading-tight">
                         {exp.role}
                       </h3>
-                      <div className="text-[10px] text-indigo-400 dark:text-indigo-300 font-semibold mt-0.5">
+                      <div className="text-xs text-[#F97316] font-semibold mt-0.5">
                         {exp.company}
                       </div>
                     </div>
-                    <span className="text-[9px] uppercase font-mono font-medium tracking-wide text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-white/5 px-2.5 py-1 rounded-lg shrink-0 self-start sm:self-center">
+                    <span className="text-[10px] uppercase font-mono font-semibold tracking-wide text-[#111110] bg-[#E8E3D9] border border-[rgba(17,17,16,0.1)] px-2.5 py-1 rounded-md shrink-0 self-start sm:self-center">
                       {exp.duration}
                     </span>
                   </div>
 
-                  <ul className="space-y-2 pt-1 border-t border-slate-200/50 dark:border-white/5">
+                  <ul className="space-y-2 pt-2 border-t border-neutral-100">
                     {exp.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed flex items-start gap-2">
-                        <span className="text-cyan-400 mt-1 shrink-0">•</span>
+                      <li key={bIdx} className="text-xs text-neutral-600 leading-relaxed flex items-start gap-2">
+                        <span className="text-neutral-400 mt-1 shrink-0">&bull;</span>
                         <span>{bullet}</span>
                       </li>
                     ))}

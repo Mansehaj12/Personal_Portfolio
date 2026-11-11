@@ -87,9 +87,9 @@ export default function AIChatbot() {
   const chatEndRef = useRef(null);
 
   const presets = [
+    "Tell me about your Paid Client Projects",
     "Tell me about CareerLens SaaS",
     "What are your core ML skills?",
-    "Are you open to internships?",
     "How do I contact you?"
   ];
 
@@ -144,8 +144,8 @@ export default function AIChatbot() {
       const lower = msgText.toLowerCase();
       let fallbackReply = "I'm having trouble reaching the backend server right now, but I can tell you that Mansehaj Preet Singh is a Computer Engineering student at TIET (graduation 2027) and a Kaggle Expert specializing in Python, Machine Learning, and Web Development!";
       
-      if (lower.includes('project') || lower.includes('capstone') || lower.includes('odd') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('careerlens')) {
-        fallbackReply = "Mansehaj's projects include:\n• **Capstone Project: Scenario-Based ODD Safety Framework for Automation in Indian Road Environments** (Perception-to-action safety pipeline using PyTorch SegNet, YOLOv8, GPU weather perturbation simulations, and Leaflet.js ODD engine)\n• **CareerLens** (AI-powered Job Market Intelligence & Placement Analytics SaaS utilizing Ridge Regression and Decision Tree models)\n• **MediSmart** (AI-assisted e-pharmacy platform & generic medicine swap portal using Tesseract.js OCR and Recharts)\n• **PowerMRO** (Industrial equipment health dashboard with Next.js & TypeScript calculating engine RUL)\n• **GameIQ** (ML-powered player analytics predicting churn for 90k+ users with 86.8% accuracy).";
+      if (lower.includes('project') || lower.includes('client') || lower.includes('paid') || lower.includes('bakery') || lower.includes('cafe') || lower.includes('nail') || lower.includes('capstone') || lower.includes('odd') || lower.includes('gameiq') || lower.includes('powermro') || lower.includes('medismart') || lower.includes('careerlens')) {
+        fallbackReply = "Mansehaj's featured projects and commercial deliveries include:\n• **Divine Cafe (Commercial PWA)**: Mobile-first web app with 1-tap WhatsApp ordering, 52-dish vegetarian menu, and offline caching ([Live Demo](https://divinecafe-plum.vercel.app/))\n• **The Home Delight Bakery (Client E-Commerce)**: Hamper catalogue with price filtering, product variants, and scannable QR generator ([Live Demo](https://the-home-delight-bakery.vercel.app/))\n• **FlawlessTips by MK**: Full-stack nail studio SaaS with booking flow, shop cart, Prisma ORM, and Firebase Auth\n• **Capstone Project: Scenario-Based ODD Safety Framework** (PyTorch SegNet, YOLOv8, and Leaflet.js ODD safety metrics)\n• **CareerLens** (Job market intelligence & placement predictor SaaS)\n• **MediSmart** (AI-assisted e-pharmacy platform with OCR scanner)\n• **PowerMRO** (Industrial telemetry and equipment RUL dashboard)\n• **GameIQ** (90k+ mobile gamer churn prediction with 86.8% accuracy).";
       } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
         fallbackReply = "You can contact Mansehaj Preet Singh at **sehajpreetsingh480@gmail.com** or call **+91-78886-55097**.";
       } else if (lower.includes('skill') || lower.includes('python') || lower.includes('javascript')) {
@@ -197,7 +197,7 @@ export default function AIChatbot() {
             </div>
 
             {/* Message Scroll Area */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-4.5 bg-slate-50/80 dark:bg-zinc-950/50">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto p-5 space-y-4.5 bg-slate-50/80 dark:bg-zinc-950/50">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {msg.sender === 'bot' && (
@@ -284,9 +284,10 @@ export default function AIChatbot() {
       {/* Launcher Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        className="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 text-white flex items-center justify-center shadow-2xl shadow-indigo-600/40 border-2 border-white/30 relative"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="w-13 h-13 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center shadow-lg border border-neutral-700/20 relative cursor-pointer"
+        aria-label="Open AI Assistant"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
